@@ -13,6 +13,11 @@ public class Company {
 		this.name = name;
 	}
 	
+	@Override
+	public String toString() {
+		return "\nCompany [id=" + id + ", name=" + name + "]";
+	}
+
 	public int getId() {
 		return id;
 	}

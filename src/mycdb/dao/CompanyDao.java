@@ -1,10 +1,13 @@
-package mycdb;
+package mycdb.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import mycdb.Company;
 
 /**
  * @author djamel
@@ -18,8 +21,21 @@ public class CompanyDao extends Dao {
 	}
 	
 	
-	public boolean create() {
-		return false;
+	public boolean create(int id, String name) {
+		String query = "INSERT INTO computer VALUES (?,?);";
+		boolean res=false;
+		try {
+			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
+			preparedStatement.setInt(1, id);
+			preparedStatement.setString(2, name);
+			preparedStatement.executeUpdate();
+			res=true;
+		
+		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 
 	public boolean delete() {
@@ -32,10 +48,10 @@ public class CompanyDao extends Dao {
 	
 	public List readAll() {
 		List<Company> list = new ArrayList<>();
+		String query = "SELECT * FROM company";
 		try {
-			ResultSet result = this.conn.createStatement(
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY).executeQuery("SELECT * FROM company");
+			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
+			ResultSet result = preparedStatement.executeQuery();
 		    while(result.next()) {
 		    	Company tmp = new Company(result.getInt("id"),result.getString("name"));
 		    	list.add(tmp);

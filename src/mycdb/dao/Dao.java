@@ -1,4 +1,4 @@
-package mycdb;
+package mycdb.dao;
 
 import java.sql.Connection;
 import java.util.List;
@@ -14,12 +14,13 @@ public abstract class Dao {
 	    this.conn = conn;
 	}
 	
-	public abstract boolean create();
+	//public abstract boolean create();
 	
 	public abstract List readAll();
 	
 	public abstract boolean update();
 	
 	public abstract boolean delete();
+	
 	
 }
