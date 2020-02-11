@@ -42,3 +42,4 @@ proguard/
 
 # Apple Files
 .DS_Store
+/build/
