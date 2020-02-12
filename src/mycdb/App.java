@@ -8,6 +8,8 @@ import java.util.List;
 
 import mycdb.dao.CompanyDao;
 import mycdb.dao.ComputerDao;
+import mycdb.model.Company;
+import mycdb.model.Computer;
 
 /**
  * @author djamel
@@ -30,22 +32,22 @@ public class App {
 		    
 		    //Statement state = conn.createStatement();
 		    //ResultSet res = state.executeQuery("SELECT * FROM computer");
-		    ComputerDao cd = new ComputerDao(conn);
-		    CompanyDao cpd = new CompanyDao(conn);
+		    //ComputerDao cd = new ComputerDao(conn);
+		    //CompanyDao cpd = new CompanyDao(conn);
 		    //cpd.create(44, "companytest");
-		    List<Computer> listComputer = cd.readAll();
-		    List<Company> listCompany = cpd.readAll();
+		    List<Computer> listComputer = ComputerDao.getInstance(conn).readAll();
+		    List<Company> listCompany = CompanyDao.getInstance(conn).readAll();
 		    //System.out.print(listComputer);
 		    //System.out.print(listCompany);
 		    //cd.create(600, "PCtest", null, null, 1);
 		   
-		    Computer c = cd.find(600);
+		    Computer c = ComputerDao.getInstance(conn).find(60);
 		    System.out.println(c);
-		    //cd.update(c, 60, "toto", c.getIntroduced(), null, 0);
+		    ComputerDao.getInstance(conn).update(c, 60, "toto", c.getIntroduced(), null, 0);
 		    //c = cd.find(60);
 		    //cd.delete(c);
 		    //List<Computer> listComputer = cd.readAll();
-		    System.out.print(listComputer);
+		    System.out.print(c);
 		    
 		    conn.close();
 		} catch (Exception e) {

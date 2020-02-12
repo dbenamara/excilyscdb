@@ -7,18 +7,34 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mycdb.Company;
+import mycdb.model.Company;
 
 /**
  * @author djamel
  *
  */
-public class CompanyDao extends Dao {
+public final class CompanyDao extends Dao {
 	//private Connection conn;
+	private static volatile CompanyDao instance = null;
 
-	public CompanyDao(Connection conn) {
+	private CompanyDao(Connection conn) {
 		super(conn);
 	}
+	
+	public final static CompanyDao getInstance(Connection conn) {
+
+		if (CompanyDao.instance == null) {
+
+			synchronized (CompanyDao.class) {
+				if (CompanyDao.instance == null) {
+					CompanyDao.instance = new CompanyDao(conn);
+				}
+			}
+		}
+		return CompanyDao.instance;
+
+	}
+
 	
 	
 	public boolean create(int id, String name) throws SQLException {

@@ -1,6 +1,9 @@
-package mycdb;
+package mycdb.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author djamel
@@ -9,11 +12,11 @@ import java.sql.Date;
 public class Computer {
 	private int id;
 	private String name;
-	private Date introduced;
-	private Date discontinued;
+	private LocalDateTime introduced;
+	private LocalDateTime discontinued;
 	private int manufacturer;
 	
-	public Computer(int id, String name, Date introduced, Date discontinued, int company_id) {
+	public Computer(int id, String name, LocalDateTime introduced, LocalDateTime discontinued, int company_id) {
 		this.id = id;
 		this.name = name;
 		this.introduced = introduced;
@@ -36,16 +39,16 @@ public class Computer {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Date getIntroduced() {
+	public LocalDateTime getIntroduced() {
 		return introduced;
 	}
-	public void setIntroduced(Date date) {
+	public void setIntroduced(LocalDateTime date) {
 		this.introduced = date;
 	}
-	public Date getDiscontinued() {
+	public LocalDateTime getDiscontinued() {
 		return discontinued;
 	}
-	public void setDiscontinued(Date date) {
+	public void setDiscontinued(LocalDateTime date) {
 		this.discontinued = date;
 	}
 	@Override

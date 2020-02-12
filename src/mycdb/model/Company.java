@@ -1,4 +1,4 @@
-package mycdb;
+package mycdb.model;
 
 /**
  * @author djamel
