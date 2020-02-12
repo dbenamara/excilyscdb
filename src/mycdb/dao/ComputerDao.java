@@ -41,14 +41,61 @@ public class ComputerDao extends Dao {
 		}
 		return res;
 	}
-
-	public boolean delete() {
-		return false;
+	
+	
+	public boolean delete(Computer c) {
+		boolean res=false;
+		String query = "DELETE FROM computer WHERE id=?;";
+		try {
+			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
+			preparedStatement.setInt(1, c.getId());
+			preparedStatement.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 	   
-	public boolean update() {
-		boolean res=false;
+	public boolean update(Computer c,int id, String name, Date introduced, Date discontinued, int company_id) {
+		boolean res=false, changes=false;
+		int tmpId=c.getId();
+		if(id>0) {
+			c.setId(id);
+			changes=true;
+		}
+		if(name!=null && name!="") {
+			c.setName(name);
+			changes=true;
+		}
+		if(introduced!=null) {
+			c.setIntroduced(introduced);
+			changes=true;
+		}
+		if(discontinued!=null) {
+			c.setDiscontinued(discontinued);
+			changes=true;
+		}
+		if(company_id>0) {
+			c.setManufacturer(company_id);
+			changes=true;
+		}
 		
+		if(changes) {
+			String query="UPDATE computer SET id=?, name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
+			try {
+				PreparedStatement preparedStatement = this.conn.prepareStatement(query);
+				preparedStatement.setInt(6, tmpId);
+				preparedStatement.setInt(1, c.getId());
+				preparedStatement.setString(2, c.getName());
+				preparedStatement.setDate(3, c.getIntroduced());
+				preparedStatement.setDate(4, c.getDiscontinued());
+				preparedStatement.setInt(5, c.getManufacturer());
+				preparedStatement.executeUpdate();
+				res=true;
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
 		return res;
 	}

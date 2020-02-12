@@ -21,7 +21,7 @@ public class CompanyDao extends Dao {
 	}
 	
 	
-	public boolean create(int id, String name) {
+	public boolean create(int id, String name) throws SQLException {
 		String query = "INSERT INTO computer VALUES (?,?);";
 		boolean res=false;
 		try {

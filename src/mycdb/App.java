@@ -3,6 +3,7 @@ package mycdb;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 import mycdb.dao.CompanyDao;
@@ -31,15 +32,20 @@ public class App {
 		    //ResultSet res = state.executeQuery("SELECT * FROM computer");
 		    ComputerDao cd = new ComputerDao(conn);
 		    CompanyDao cpd = new CompanyDao(conn);
-		    cpd.create(44, "companytest");
+		    //cpd.create(44, "companytest");
 		    List<Computer> listComputer = cd.readAll();
 		    List<Company> listCompany = cpd.readAll();
 		    //System.out.print(listComputer);
 		    //System.out.print(listCompany);
-		    cd.create(600, "PCtest", null, null, 1);
-		    
+		    //cd.create(600, "PCtest", null, null, 1);
+		   
 		    Computer c = cd.find(600);
-		    System.out.print(c);
+		    System.out.println(c);
+		    //cd.update(c, 60, "toto", c.getIntroduced(), null, 0);
+		    //c = cd.find(60);
+		    //cd.delete(c);
+		    //List<Computer> listComputer = cd.readAll();
+		    System.out.print(listComputer);
 		    
 		    conn.close();
 		} catch (Exception e) {

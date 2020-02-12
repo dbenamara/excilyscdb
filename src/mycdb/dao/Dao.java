@@ -18,9 +18,9 @@ public abstract class Dao {
 	
 	public abstract List readAll();
 	
-	public abstract boolean update();
+	//public abstract boolean update();
 	
-	public abstract boolean delete();
+	//public abstract boolean delete(Object o);
 	
 	
 }
