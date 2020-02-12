@@ -3,13 +3,13 @@ package mycdb;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.List;
 
-import mycdb.dao.CompanyDao;
 import mycdb.dao.ComputerDao;
 import mycdb.model.Company;
 import mycdb.model.Computer;
+import mycdb.services.CompanyService;
+import mycdb.services.ComputerService;
 
 /**
  * @author djamel
@@ -35,8 +35,8 @@ public class App {
 		    //ComputerDao cd = new ComputerDao(conn);
 		    //CompanyDao cpd = new CompanyDao(conn);
 		    //cpd.create(44, "companytest");
-		    List<Computer> listComputer = ComputerDao.getInstance(conn).readAll();
-		    List<Company> listCompany = CompanyDao.getInstance(conn).readAll();
+		    List<Computer> listComputer = ComputerService.getInstance(conn).readAll();
+		    List<Company> listCompany = CompanyService.getInstance(conn).readAll();
 		    //System.out.print(listComputer);
 		    //System.out.print(listCompany);
 		    //cd.create(600, "PCtest", null, null, 1);
@@ -47,7 +47,7 @@ public class App {
 		    //c = cd.find(60);
 		    //cd.delete(c);
 		    //List<Computer> listComputer = cd.readAll();
-		    System.out.print(c);
+		    System.out.print(listComputer);
 		    
 		    conn.close();
 		} catch (Exception e) {
