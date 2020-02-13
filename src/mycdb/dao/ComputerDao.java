@@ -1,18 +1,16 @@
 package mycdb.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import mycdb.model.Company;
 import mycdb.model.Computer;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * @author djamel
@@ -120,12 +118,22 @@ public class ComputerDao extends Dao {
 	public List readAll() {
 		List<Computer> list = new ArrayList<>();
 		String query = "SELECT * FROM computer";
+		Company company = new Company();
 		try {
 			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
 			ResultSet result = preparedStatement.executeQuery(); 
 		    while(result.next()) {
-		    	Computer tmp = new Computer(result.getInt("id"),result.getString("name"),(result.getTimestamp("introduced")==null)?null:result.getTimestamp("introduced").toLocalDateTime(),(result.getTimestamp("discontinued")==null)?null:result.getTimestamp("discontinued").toLocalDateTime(),result.getInt("company_id"));
-		    	list.add(tmp);
+		    	Computer computer = new Computer();
+		    	computer.setId(result.getInt("id"));
+		    	computer.setName(result.getString("name"));
+		    	computer.setIntroduced(result.getTimestamp("introduced")==null?null:result.getTimestamp("introduced").toLocalDateTime());
+		    	computer.setDiscontinued(result.getTimestamp("discontinued")==null?null:result.getTimestamp("discontinued").toLocalDateTime());
+		    	company.setId(result.getInt("company_id"));
+		    	company.setName(result.getString("company.name"));
+		    	computer.setCompany(company);
+		    	
+		    	//Computer tmp = new Computer(result.getInt("id"),result.getString("name"),(result.getTimestamp("introduced")==null)?null:result.getTimestamp("introduced").toLocalDateTime(),(result.getTimestamp("discontinued")==null)?null:result.getTimestamp("discontinued").toLocalDateTime(),result.getInt("company_id"));
+		    	list.add(computer);
 		    }        
 		} catch (SQLException e) {
 		      e.printStackTrace();
@@ -135,19 +143,27 @@ public class ComputerDao extends Dao {
 	}
 	
 	public Computer find(int id) {
-		Computer tmp = null;
+		Computer computer = new Computer();
+		Company company = new Company();
 		String query = "SELECT * FROM computer WHERE id=?";
 		try {
 			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
 			preparedStatement.setInt(1, id);
 			ResultSet result = preparedStatement.executeQuery();
 				if(result.first()) {
-					tmp= new Computer(result.getInt("id"),result.getString("name"),(result.getTimestamp("introduced")==null)?null:result.getTimestamp("introduced").toLocalDateTime(),(result.getTimestamp("discontinued")==null)?null:result.getTimestamp("discontinued").toLocalDateTime(),result.getInt("company_id"));
+					computer.setId(result.getInt("id"));
+			    	computer.setName(result.getString("name"));
+			    	computer.setIntroduced(result.getTimestamp("introduced")==null?null:result.getTimestamp("introduced").toLocalDateTime());
+			    	computer.setDiscontinued(result.getTimestamp("discontinued")==null?null:result.getTimestamp("discontinued").toLocalDateTime());
+			    	company.setId(result.getInt("company_id"));
+			    	company.setName(result.getString("company.name"));
+			    	computer.setCompany(company);
+					//tmp= new Computer(result.getInt("id"),result.getString("name"),(result.getTimestamp("introduced")==null)?null:result.getTimestamp("introduced").toLocalDateTime(),(result.getTimestamp("discontinued")==null)?null:result.getTimestamp("discontinued").toLocalDateTime(),result.getInt("company_id"));
 				}
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
-		return tmp;
+		return computer;
 	}
 
 
