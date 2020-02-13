@@ -46,8 +46,8 @@ public class ComputerDao extends Dao {
 			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
 			preparedStatement.setInt(1, id);
 			preparedStatement.setString(2, name);
-			preparedStatement.setTimestamp(3, Timestamp.valueOf(introduced));
-			preparedStatement.setTimestamp(4, Timestamp.valueOf(discontinued));
+			preparedStatement.setTimestamp(3, (introduced!=null)?Timestamp.valueOf(introduced):null);
+			preparedStatement.setTimestamp(4, (discontinued!=null)?Timestamp.valueOf(discontinued):null);
 			preparedStatement.setInt(5, company_id);
 			preparedStatement.executeUpdate();
 			res=true;
