@@ -13,12 +13,12 @@ import mycdb.model.Company;
  * @author djamel
  *
  */
-public final class CompanyDao extends Dao {
-	//private Connection conn;
+public final class CompanyDao {
+	private Connection conn;
 	private static volatile CompanyDao instance = null;
 
 	private CompanyDao(Connection conn) {
-		super(conn);
+		this.conn = conn;
 	}
 	
 	public final static CompanyDao getInstance(Connection conn) {

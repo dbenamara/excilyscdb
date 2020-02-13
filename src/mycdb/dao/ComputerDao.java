@@ -16,10 +16,11 @@ import mycdb.model.Computer;
  * @author djamel
  *
  */
-public class ComputerDao extends Dao {
+public class ComputerDao {
 	private static volatile ComputerDao instance = null;
+	private Connection conn;
 	private ComputerDao(Connection conn) {
-		super(conn);
+		this.conn = conn;
 	}
 	
 	public final static ComputerDao getInstance(Connection conn) {
