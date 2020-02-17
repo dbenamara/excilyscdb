@@ -12,8 +12,8 @@ import mycdb.model.Computer;
  *
  */
 public class ComputerMapper {
-	Computer computer;
-	Company company;
+	private Computer computer;
+	private Company company;
 	private static volatile ComputerMapper instance = null;
 	
 	private ComputerMapper() {}
@@ -30,10 +30,23 @@ public class ComputerMapper {
 	}
 	
 	public Computer getComputer(ResultSet resDetailcomputer) throws SQLException {
-		this.computer = new Computer();
-		this.company = new Company();
+		//this.computer = new Computer();
+		//this.company = new Company();
 		if (resDetailcomputer.next()){
-			computer.setId(resDetailcomputer.getInt("computer.id"));
+			this.company = new Company.CompanyBuilder().setName(resDetailcomputer.getString("company.name"))
+					.setId(resDetailcomputer.getInt("company_id")).build();
+			
+			this.computer = new Computer.ComputerBuilder().setCompany(company).setId(resDetailcomputer.getInt("computer.id"))
+					.setName(resDetailcomputer.getString("computer.name"))
+					.setIntroduced(resDetailcomputer.getTimestamp("computer.introduced") != null
+							? resDetailcomputer.getTimestamp("computer.introduced").toLocalDateTime()
+							: null)
+					.setDiscontinued(resDetailcomputer.getTimestamp("discontinued") != null
+							? resDetailcomputer.getTimestamp("computer.discontinued").toLocalDateTime()
+							: null)
+					.build();
+			
+			/*computer.setId(resDetailcomputer.getInt("computer.id"));
 			computer.setName(resDetailcomputer.getString("computer.name"));
 			computer.setIntroduced(resDetailcomputer.getTimestamp("computer.introduced")!=null?
 					resDetailcomputer.getTimestamp("computer.introduced").toLocalDateTime():null);
@@ -42,9 +55,9 @@ public class ComputerMapper {
 			company.setId(resDetailcomputer.getInt("company_id"));
 			company.setName(resDetailcomputer.getString("company.name"));
 			computer.setCompany(company);
-		}
+		*/}
 		
 		return computer;
-}
+	}
 	
 }

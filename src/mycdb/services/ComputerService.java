@@ -48,6 +48,16 @@ public class ComputerService {
 	public Computer find(int id) {
 		return ComputerDao.getInstance().find(id).get();
 	}
+	
+	public List<Computer> getPageComputer(int offset, int number) {
+		return ComputerDao.getInstance().getPageComputer(offset, number).get();
+	}
+	
+	public int getlength() {
+		return readAll().size();
+}
+
+	
 }
 
 

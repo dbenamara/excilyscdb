@@ -1,13 +1,12 @@
 package mycdb.dao;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import mycdb.mapper.CompanyMapper;
 import mycdb.model.Company;
 
 /**
@@ -19,7 +18,8 @@ public final class CompanyDao {
 	private static volatile CompanyDao instance = null;
 	private static final String CREATE_COMPANY = "INSERT INTO company (id,  name) VALUES(?, ?)";
 	private static final String GET_ALL_COMPANY = "SELECT * FROM company";
-
+	private static final String SELECT_COMPANY_PAGE = "SELECT * FROM company LIMIT ?,? ";
+	
 	private CompanyDao() {
 		this.conn = Connexion.getInstance();
 	}
@@ -88,6 +88,30 @@ public final class CompanyDao {
 		}
 		conn.close();
 		return list;
+	}
+	
+	public List<Company> getPageCompany(int offset, int number) {
+
+		List<Company> companylist = new ArrayList<Company>();
+		this.conn = Connexion.getInstance();
+		conn.connect();
+		try {
+			PreparedStatement statementSelectPage = conn.getConn().prepareStatement(SELECT_COMPANY_PAGE);
+			statementSelectPage.setInt(1, offset);
+			statementSelectPage.setInt(2, number);
+			ResultSet resListeCompany = statementSelectPage.executeQuery();
+
+			while (resListeCompany.next()) {
+				companylist.add(CompanyMapper.getInstance().getCompany(resListeCompany));
+			}
+
+			statementSelectPage.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		conn.close();
+		return companylist;
 	}
 
 }

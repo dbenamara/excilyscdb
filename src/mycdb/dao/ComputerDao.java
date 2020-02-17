@@ -27,6 +27,7 @@ public class ComputerDao {
 	private static final String GET_ALL_COMPUTER = "SELECT computer.id , computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company ON company_id=company.id";
 	private static final String GET_COMPUTER_BY_ID = "SELECT * FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.id = ?;";
 	//private static final String GET_ALL_COMPUTER = "SELECT * FROM COMPUTER";
+	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id  LIMIT ?,?;";
 	
 	private ComputerDao() {
 		this.conn = Connexion.getInstance();
@@ -182,6 +183,30 @@ public class ComputerDao {
 		
 	}
 
+	public  Optional<List<Computer>> getPageComputer(int offset, int number) {
+
+		List<Computer> computerlist = new ArrayList<Computer>();
+		this.conn = Connexion.getInstance();
+		conn.connect();
+		try  {
+			PreparedStatement statementSelecPage = conn.getConn().prepareStatement(GET_PAGE_COMPUTER);
+			statementSelecPage.setInt(1, offset);
+			statementSelecPage.setInt(2, number);
+			ResultSet resListecomputer = statementSelecPage.executeQuery();
+			while (resListecomputer.next()) {
+				Computer computer = ComputerMapper.getInstance().getComputer(resListecomputer);
+
+				computerlist.add(computer);
+			}
+
+			statementSelecPage.close();
+			resListecomputer.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return Optional.ofNullable(computerlist);
+}
 
 	
 }

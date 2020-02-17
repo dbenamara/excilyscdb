@@ -82,27 +82,32 @@ public class Computer {
 		private LocalDateTime discontinued;
 		private Company company;
 
-		public ComputerBuilder id(int id) {
+		public ComputerBuilder setId(int id) {
 			this.id = id;
 			return this;
 		}
 
-		public ComputerBuilder name(String name) {
+		public ComputerBuilder setName(String name) {
 			this.name = name;
 			return this;
 		}
 
-		public ComputerBuilder introduced(LocalDateTime introduced) {
+		public ComputerBuilder setIntroduced(LocalDateTime introduced) {
 			this.introduced = introduced;
 			return this;
 		}
 
-		public ComputerBuilder Discontinued(LocalDateTime dicontinued) {
+		public ComputerBuilder setDiscontinued(LocalDateTime dicontinued) {
 			this.discontinued = dicontinued;
 			return this;
 		}
+		
+		public ComputerBuilder setCompany(Company company) {
+			this.company = company;
+			return this;
+		}
 
-		public ComputerBuilder idCompagny(Company company) {
+		public ComputerBuilder setIdCompagny(Company company) {
 			this.company = company;
 			return this;
 		}

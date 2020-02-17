@@ -46,10 +46,10 @@ public class App {
 		  
 		    switch(action) {
 		    	case 0:
-		    		System.out.println(listComputer);
+		    		cli.pagineComputer();
 		    		break;
 		    	case 1:
-		    		System.out.println(listCompany);
+		    		cli.pagineCompany();
 		    		break;
 		    	case 2:
 		    		int idComputer = cli.getComputerId();

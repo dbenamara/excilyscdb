@@ -1,6 +1,5 @@
 package mycdb.services;
 
-import java.sql.Connection;
 import java.util.List;
 
 import mycdb.dao.CompanyDao;
@@ -28,7 +27,14 @@ public class CompanyService {
 		return CompanyService.instance;	
 	}
 	
-	public List readAll() {
+	public List<Company> readAll() {
 		return CompanyDao.getInstance().readAll();
+	}
+	
+	public int getlength(){
+		return readAll().size();
+	}
+	public List<Company> getPageCompany(int offset, int number){
+		return CompanyDao.getInstance().getPageCompany(offset, number);
 	}
 }
