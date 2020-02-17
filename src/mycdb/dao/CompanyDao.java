@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import mycdb.model.Company;
 
 /**
@@ -14,20 +15,22 @@ import mycdb.model.Company;
  *
  */
 public final class CompanyDao {
-	private Connection conn;
+	private Connexion conn;
 	private static volatile CompanyDao instance = null;
+	private static final String CREATE_COMPANY = "INSERT INTO company (id,  name) VALUES(?, ?)";
+	private static final String GET_ALL_COMPANY = "SELECT * FROM company";
 
-	private CompanyDao(Connection conn) {
-		this.conn = conn;
+	private CompanyDao() {
+		this.conn = Connexion.getInstance();
 	}
 	
-	public final static CompanyDao getInstance(Connection conn) {
+	public final static CompanyDao getInstance() {
 
 		if (CompanyDao.instance == null) {
 
 			synchronized (CompanyDao.class) {
 				if (CompanyDao.instance == null) {
-					CompanyDao.instance = new CompanyDao(conn);
+					CompanyDao.instance = new CompanyDao();
 				}
 			}
 		}
@@ -37,13 +40,15 @@ public final class CompanyDao {
 
 	
 	
-	public boolean create(int id, String name) throws SQLException {
-		String query = "INSERT INTO computer VALUES (?,?);";
+	public boolean create(Company company) /*throws SQLException*/ {
+		
+		this.conn = Connexion.getInstance();
+		conn.connect();
 		boolean res=false;
 		try {
-			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
-			preparedStatement.setInt(1, id);
-			preparedStatement.setString(2, name);
+			PreparedStatement preparedStatement = this.conn.getConn().prepareStatement(CREATE_COMPANY);
+			preparedStatement.setInt(1, company.getId());
+			preparedStatement.setString(2, company.getName());
 			preparedStatement.executeUpdate();
 			res=true;
 		
@@ -51,6 +56,7 @@ public final class CompanyDao {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		conn.close();
 		return res;
 	}
 
@@ -60,13 +66,16 @@ public final class CompanyDao {
 	   
 	public boolean update() {
 		return false;
-	}
-	
-	public List readAll() {
+	}	
+	public List<Company> readAll() {
+		conn = Connexion.getInstance();
+		conn.connect();
 		List<Company> list = new ArrayList<>();
-		String query = "SELECT * FROM company";
 		try {
-			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
+			System.out.println(conn);
+			System.out.println("TOTOTOTOTOTO");	
+			//System.out.println(conn.getConn());
+			PreparedStatement preparedStatement = conn.getConn().prepareStatement(GET_ALL_COMPANY);
 			ResultSet result = preparedStatement.executeQuery();
 		    while(result.next()) {
 		    	Company tmp = new Company(result.getInt("id"),result.getString("name"));
@@ -74,10 +83,10 @@ public final class CompanyDao {
 		    	
 		    	
 		    }        
-		} catch (SQLException e) {
+		}catch (SQLException e) {
 		      e.printStackTrace();
-		    }
-		
+		}
+		conn.close();
 		return list;
 	}
 

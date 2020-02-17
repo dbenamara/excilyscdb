@@ -19,7 +19,7 @@ public class Computer {
 	
 	public Computer() {}
 	
-	public Computer(int id, String name, Company company) {
+	public Computer(int id, String name, LocalDateTime introduced, LocalDateTime Discontinued, Company company) {
 		this.id = id;
 		this.name = name;
 		this.company=company;
@@ -58,7 +58,7 @@ public class Computer {
 
 	public void setCompany(Company compagny) {
 		this.company = company;
-}
+	}	
 	
 	
 	@Override
@@ -74,6 +74,55 @@ public class Computer {
 		this.manufacturer = manufacturer;
 	}
 	
+
+	public static class ComputerBuilder {
+		private int id;
+		private String name;
+		private LocalDateTime introduced;
+		private LocalDateTime discontinued;
+		private Company company;
+
+		public ComputerBuilder id(int id) {
+			this.id = id;
+			return this;
+		}
+
+		public ComputerBuilder name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public ComputerBuilder introduced(LocalDateTime introduced) {
+			this.introduced = introduced;
+			return this;
+		}
+
+		public ComputerBuilder Discontinued(LocalDateTime dicontinued) {
+			this.discontinued = dicontinued;
+			return this;
+		}
+
+		public ComputerBuilder idCompagny(Company company) {
+			this.company = company;
+			return this;
+		}
+
+		public Computer build() {
+			return new Computer(this);
+		}
+		
+		
+	}
+	
+	private Computer(ComputerBuilder builder) {
+		this.id = builder.id;
+		this.name = builder.name;
+		this.introduced = builder.introduced;
+		this.discontinued = builder.discontinued;
+		this.company = builder.company;
+	}
+	
+
 	
 	
 	

@@ -8,7 +8,7 @@ public class Company {
 	private int id;
 	private String name;
 	
-	public Company() {}
+	public Company(){}
 	
 	public Company(int id, String name) {
 		this.id = id;
@@ -32,6 +32,32 @@ public class Company {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public static class CompanyBuilder {
+		private int id;
+		private String name;
+
+		public CompanyBuilder id(int id) {
+			this.id = id;
+			return this;
+		}
+
+		public CompanyBuilder name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Company build() {
+			return new Company(this);
+		}
+	}
+
+	private Company(CompanyBuilder companyBuilder) {
+		this.id = companyBuilder.id;
+		this.name = companyBuilder.name;
+	}
+
+
 	
 	
 }

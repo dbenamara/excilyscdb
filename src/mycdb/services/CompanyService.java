@@ -12,26 +12,23 @@ import mycdb.model.Company;
  */
 public class CompanyService {
 	private static volatile CompanyService instance = null;
-	private Connection conn;
-	private CompanyService(Connection conn) {
-		this.conn=conn;
-	}
+	private CompanyService() {}
 	
-	public final static CompanyService getInstance(Connection conn) {
+	public final static CompanyService getInstance() {
 
 		if (CompanyService.instance == null) {
 
 			synchronized (CompanyService.class) {
 				if (CompanyService.instance == null) {
-					CompanyService.instance = new CompanyService(conn);
+					CompanyService.instance = new CompanyService();
 				}
 			}
 		}
 
-		return CompanyService.instance;
+		return CompanyService.instance;	
 	}
 	
 	public List readAll() {
-		return CompanyDao.getInstance(this.conn).readAll();
+		return CompanyDao.getInstance().readAll();
 	}
 }

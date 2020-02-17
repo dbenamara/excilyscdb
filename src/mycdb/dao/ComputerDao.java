@@ -11,6 +11,8 @@ import java.util.List;
 
 import mycdb.model.Company;
 import mycdb.model.Computer;
+import mycdb.mapper.ComputerMapper;
+import java.util.Optional;
 
 /**
  * @author djamel
@@ -18,18 +20,25 @@ import mycdb.model.Computer;
  */
 public class ComputerDao {
 	private static volatile ComputerDao instance = null;
-	private Connection conn;
-	private ComputerDao(Connection conn) {
-		this.conn = conn;
+	private Connexion conn;
+	private static final String CREATE_COMPUTER = "INSERT INTO computer (id,  name, introduced, discontinued, company_id) VALUES (?,?,?,?,?);";
+	private static final String DELETE_COMPUTER = "DELETE FROM computer WHERE id=?;";
+	private static final String UPDATE_COMPUTER = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
+	private static final String GET_ALL_COMPUTER = "SELECT computer.id , computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company ON company_id=company.id";
+	private static final String GET_COMPUTER_BY_ID = "SELECT * FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.id = ?;";
+	//private static final String GET_ALL_COMPUTER = "SELECT * FROM COMPUTER";
+	
+	private ComputerDao() {
+		this.conn = Connexion.getInstance();
 	}
 	
-	public final static ComputerDao getInstance(Connection conn) {
+	public final static ComputerDao getInstance() {
 
 		if (ComputerDao.instance == null) {
 
 			synchronized (ComputerDao.class) {
 				if (ComputerDao.instance == null) {
-					ComputerDao.instance = new ComputerDao(conn);
+					ComputerDao.instance = new ComputerDao();
 				}
 			}
 		}
@@ -38,44 +47,54 @@ public class ComputerDao {
 	}
 
 	
-	public boolean create(int id, String name, LocalDateTime introduced, LocalDateTime discontinued, int company_id) {
-		String query = "INSERT INTO computer VALUES (?,?,?,?,?);";
+	public boolean create(Computer computer) {
 		boolean res=false;
+		this.conn = Connexion.getInstance();
+		conn.connect();
 		try {
-			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
-			preparedStatement.setInt(1, id);
-			preparedStatement.setString(2, name);
-			preparedStatement.setTimestamp(3, (introduced!=null)?Timestamp.valueOf(introduced):null);
-			preparedStatement.setTimestamp(4, (discontinued!=null)?Timestamp.valueOf(discontinued):null);
-			preparedStatement.setInt(5, company_id);
+			PreparedStatement preparedStatement = conn.getConn().prepareStatement(CREATE_COMPUTER);
+			preparedStatement.setInt(1, computer.getId());
+			preparedStatement.setString(2, computer.getName());
+			preparedStatement.setTimestamp(3, (computer.getIntroduced()!=null)?Timestamp.valueOf(computer.getIntroduced()):null);
+			preparedStatement.setTimestamp(4, (computer.getDiscontinued()!=null)?Timestamp.valueOf(computer.getDiscontinued()):null);
+			preparedStatement.setInt(5, computer.getCompany().getId());
 			preparedStatement.executeUpdate();
+			preparedStatement.close();
 			res=true;
 		
 		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		conn.close();
 		return res;
 	}
 	
 	
-	public boolean delete(Computer c) {
+	public boolean delete(int id) {
 		boolean res=false;
+		this.conn = Connexion.getInstance();
+		conn.connect();
 		String query = "DELETE FROM computer WHERE id=?;";
 		try {
-			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
-			preparedStatement.setInt(1, c.getId());
+			PreparedStatement preparedStatement = conn.getConn().prepareStatement(DELETE_COMPUTER);
+			preparedStatement.setInt(1, id);
 			preparedStatement.executeUpdate();
+			preparedStatement.close();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		conn.close();
 		return res;
 	}
 	   
-	public boolean update(Computer c,int id, String name, LocalDateTime introduced, LocalDateTime discontinued, int company_id) {
+	public boolean update(Computer computer) {
+		this.conn = Connexion.getInstance();
+		conn.connect();
 		boolean res=false, changes=false;
-		int tmpId=c.getId();
-		if(id>0) {
+		Optional<Computer> comp = find(computer.getId());
+		/*int tmpId=c.getId();
+		/*if(id>0) {
 			c.setId(id);
 			changes=true;
 		}
@@ -96,75 +115,71 @@ public class ComputerDao {
 			changes=true;
 		}
 		
-		if(changes) {
-			String query="UPDATE computer SET id=?, name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
+		if(changes) {*/
+			String query="UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
 			try {
-				PreparedStatement preparedStatement = this.conn.prepareStatement(query);
-				preparedStatement.setInt(6, tmpId);
-				preparedStatement.setInt(1, (id>0)?id:c.getId());
-				preparedStatement.setString(2, (name!=null && name!="")?name:c.getName());
-				preparedStatement.setTimestamp(3, (introduced!=null)?Timestamp.valueOf(introduced):(c.getIntroduced()==null)?null:Timestamp.valueOf(c.getIntroduced()));
-				preparedStatement.setTimestamp(4, (discontinued!=null)?Timestamp.valueOf(discontinued):(c.getDiscontinued()==null)?null:Timestamp.valueOf(c.getDiscontinued()));
-				preparedStatement.setInt(5, (company_id>0)?company_id:c.getManufacturer());
+				PreparedStatement preparedStatement = conn.getConn().prepareStatement(UPDATE_COMPUTER);
+				preparedStatement.setInt(5, computer.getId());
+				//preparedStatement.setInt(1, (id>0)?id:c.getId());
+				preparedStatement.setString(1, (computer.getName()!=null)?computer.getName():null);
+				//preparedStatement.setString(2, (name!=null && name!="")?name:c.getName());
+				//preparedStatement.setString(2, (computer.getName()!=null)?computer.getName():(comp.getName()==null)?null:comp.getName());
+				//(comp.getIntroduced()==null)?null:Timestamp.valueOf(comp.getIntroduced()
+				preparedStatement.setTimestamp(2, (computer.getIntroduced()!=null)?Timestamp.valueOf(computer.getIntroduced()):null);
+				preparedStatement.setTimestamp(3, (computer.getDiscontinued()!=null)?Timestamp.valueOf(computer.getDiscontinued()):null);
+				preparedStatement.setInt(4, computer.getCompany().getId());
+				//preparedStatement.setTimestamp(4, (discontinued!=null)?Timestamp.valueOf(discontinued):(c.getDiscontinued()==null)?null:Timestamp.valueOf(c.getDiscontinued()));
+				//preparedStatement.setInt(4, (computer.getId()>0)?computer.getId():comp.getCompany().getId());
 				preparedStatement.executeUpdate();
 				res=true;
-			} catch(Exception e) {
+			} catch(SQLException e) {
 				e.printStackTrace();
 			}
-		}
+			conn.close();
+			return res;
 		
-		return res;
 	}
+		
 	
-	public List readAll() {
+	
+	public List<Computer> readAll() {
 		List<Computer> list = new ArrayList<>();
-		String query = "SELECT * FROM computer";
+		this.conn = Connexion.getInstance();
+		conn.connect();
 		Company company = new Company();
 		try {
-			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
+			PreparedStatement preparedStatement = conn.getConn().prepareStatement(GET_ALL_COMPUTER);
+			System.out.println("TOTOTOTOTO");
 			ResultSet result = preparedStatement.executeQuery(); 
 		    while(result.next()) {
-		    	Computer computer = new Computer();
-		    	computer.setId(result.getInt("id"));
-		    	computer.setName(result.getString("name"));
-		    	computer.setIntroduced(result.getTimestamp("introduced")==null?null:result.getTimestamp("introduced").toLocalDateTime());
-		    	computer.setDiscontinued(result.getTimestamp("discontinued")==null?null:result.getTimestamp("discontinued").toLocalDateTime());
-		    	company.setId(result.getInt("company_id"));
-		    	company.setName(result.getString("company.name"));
-		    	computer.setCompany(company);
-		    	
-		    	//Computer tmp = new Computer(result.getInt("id"),result.getString("name"),(result.getTimestamp("introduced")==null)?null:result.getTimestamp("introduced").toLocalDateTime(),(result.getTimestamp("discontinued")==null)?null:result.getTimestamp("discontinued").toLocalDateTime(),result.getInt("company_id"));
+		    	Computer computer = ComputerMapper.getInstance().getComputer(result);
 		    	list.add(computer);
 		    }        
 		} catch (SQLException e) {
 		      e.printStackTrace();
 		    }
-		
+		conn.close();
 		return list;
 	}
 	
-	public Computer find(int id) {
+	public Optional<Computer> find(int id) {
 		Computer computer = new Computer();
 		Company company = new Company();
 		String query = "SELECT * FROM computer WHERE id=?";
+		this.conn = Connexion.getInstance();
+		conn.connect();
 		try {
-			PreparedStatement preparedStatement = this.conn.prepareStatement(query);
+			PreparedStatement preparedStatement = conn.getConn().prepareStatement(GET_COMPUTER_BY_ID);
 			preparedStatement.setInt(1, id);
 			ResultSet result = preparedStatement.executeQuery();
-				if(result.first()) {
-					computer.setId(result.getInt("id"));
-			    	computer.setName(result.getString("name"));
-			    	computer.setIntroduced(result.getTimestamp("introduced")==null?null:result.getTimestamp("introduced").toLocalDateTime());
-			    	computer.setDiscontinued(result.getTimestamp("discontinued")==null?null:result.getTimestamp("discontinued").toLocalDateTime());
-			    	company.setId(result.getInt("company_id"));
-			    	company.setName(result.getString("company.name"));
-			    	computer.setCompany(company);
-					//tmp= new Computer(result.getInt("id"),result.getString("name"),(result.getTimestamp("introduced")==null)?null:result.getTimestamp("introduced").toLocalDateTime(),(result.getTimestamp("discontinued")==null)?null:result.getTimestamp("discontinued").toLocalDateTime(),result.getInt("company_id"));
-				}
+			computer = ComputerMapper.getInstance().getComputer(result);
+				
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
-		return computer;
+		conn.close();
+		return Optional.ofNullable(computer);
+		
 	}
 
 
