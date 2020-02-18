@@ -3,11 +3,13 @@
 
 import java.util.List;
 
+import org.apache.log4j.PropertyConfigurator;
+
+import Logger.Logging;
 import model.Company;
 import model.Computer;
 import services.CompanyService;
 import services.ComputerService;
-import org.slf4j.Logger;
 
 
 
@@ -22,7 +24,8 @@ public class App {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
+		PropertyConfigurator.configure(Logging.class.getClassLoader().getResource("log4jFile.properties"));
 		try {
 			
 		         

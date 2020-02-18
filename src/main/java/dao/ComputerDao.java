@@ -11,7 +11,7 @@ import java.util.Optional;
 import mapper.ComputerMapper;
 import model.Company;
 import model.Computer;
-
+import Logger.Logging;
 /**
  * @author djamel
  *
@@ -27,8 +27,12 @@ public class ComputerDao {
 	//private static final String GET_ALL_COMPUTER = "SELECT * FROM COMPUTER";
 	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id  LIMIT ?,?;";
 	
+	private Logging log;
+	private static final String ERROR_ACCESS = "Impossible de se connecter à la bdd";
+	
 	private ComputerDao() {
 		this.conn = Connexion.getInstance();
+		this.log = new Logging();
 	}
 	
 	public final static ComputerDao getInstance() {
@@ -62,8 +66,8 @@ public class ComputerDao {
 			res=true;
 		
 		
-		}catch(Exception e) {
-			e.printStackTrace();
+		}catch(SQLException e) {
+			log.printError(ERROR_ACCESS);
 		}
 		conn.close();
 		return res;
@@ -132,7 +136,7 @@ public class ComputerDao {
 				preparedStatement.executeUpdate();
 				res=true;
 			} catch(SQLException e) {
-				e.printStackTrace();
+				log.printError(ERROR_ACCESS);
 			}
 			conn.close();
 			return res;
@@ -155,7 +159,7 @@ public class ComputerDao {
 		    	list.add(computer);
 		    }        
 		} catch (SQLException e) {
-		      e.printStackTrace();
+			log.printError(ERROR_ACCESS);
 		    }
 		conn.close();
 		return list;
@@ -174,7 +178,7 @@ public class ComputerDao {
 			computer = ComputerMapper.getInstance().getComputer(result);
 				
 		} catch (SQLException e){
-			e.printStackTrace();
+			log.printError(ERROR_ACCESS);
 		}
 		conn.close();
 		return Optional.ofNullable(computer);
@@ -201,7 +205,7 @@ public class ComputerDao {
 			resListecomputer.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.printError(ERROR_ACCESS);
 		}
 		return Optional.ofNullable(computerlist);
 }

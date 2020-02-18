@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import Logger.Logging;
 import mapper.CompanyMapper;
 import model.Company;
 
@@ -19,9 +20,12 @@ public final class CompanyDao {
 	private static final String CREATE_COMPANY = "INSERT INTO company (id,  name) VALUES(?, ?)";
 	private static final String GET_ALL_COMPANY = "SELECT * FROM company";
 	private static final String SELECT_COMPANY_PAGE = "SELECT * FROM company LIMIT ?,? ";
+	private static final String ERROR_ACCESS = "Impossible de se connecter à la bdd";
+	private Logging log;
 	
 	private CompanyDao() {
 		this.conn = Connexion.getInstance();
+		this.log = new Logging();
 	}
 	
 	public final static CompanyDao getInstance() {
@@ -54,7 +58,7 @@ public final class CompanyDao {
 		
 		
 		}catch(Exception e) {
-			e.printStackTrace();
+			log.printError(ERROR_ACCESS);
 		}
 		conn.close();
 		return res;
@@ -84,7 +88,7 @@ public final class CompanyDao {
 		    	
 		    }        
 		}catch (SQLException e) {
-		      e.printStackTrace();
+			log.printError(ERROR_ACCESS);
 		}
 		conn.close();
 		return list;
@@ -108,7 +112,7 @@ public final class CompanyDao {
 			statementSelectPage.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.printError(ERROR_ACCESS);
 		}
 		conn.close();
 		return companylist;
