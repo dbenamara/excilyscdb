@@ -119,7 +119,7 @@ public class Cli {
 					System.out.println("vous etes a la derniere page!");
 				}
 			}
-			if (saisie == "p") {
+			if (saisie.contentEquals("p")) {
 				if (offset < 20) {
 					System.out.println("vous etes a la premiere page!");
 				} else {
