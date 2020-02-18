@@ -7,6 +7,9 @@ import model.Company;
 import model.Computer;
 import services.CompanyService;
 import services.ComputerService;
+import org.slf4j.Logger;
+
+
 
 /**
  * @author djamel
