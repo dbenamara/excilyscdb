@@ -19,7 +19,7 @@ import Logger.Logging;
 public class ComputerDao {
 	private static volatile ComputerDao instance = null;
 	private Connexion conn;
-	private static final String CREATE_COMPUTER = "INSERT INTO computer (id,  name, introduced, discontinued, company_id) VALUES (?,?,?,?,?);";
+	private static final String CREATE_COMPUTER = "INSERT INTO computer (  name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
 	private static final String DELETE_COMPUTER = "DELETE FROM computer WHERE id=?;";
 	private static final String UPDATE_COMPUTER = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
 	private static final String GET_ALL_COMPUTER = "SELECT computer.id , computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company ON company_id=company.id";
@@ -56,18 +56,17 @@ public class ComputerDao {
 		conn.connect();
 		try {
 			PreparedStatement preparedStatement = conn.getConn().prepareStatement(CREATE_COMPUTER);
-			preparedStatement.setInt(1, computer.getId());
-			preparedStatement.setString(2, computer.getName());
-			preparedStatement.setTimestamp(3, (computer.getIntroduced()!=null)?Timestamp.valueOf(computer.getIntroduced()):null);
-			preparedStatement.setTimestamp(4, (computer.getDiscontinued()!=null)?Timestamp.valueOf(computer.getDiscontinued()):null);
-			preparedStatement.setInt(5, computer.getCompany().getId());
+			preparedStatement.setString(1, computer.getName());
+			preparedStatement.setTimestamp(2, (computer.getIntroduced()!=null)?Timestamp.valueOf(computer.getIntroduced()):null);
+			preparedStatement.setTimestamp(3, (computer.getDiscontinued()!=null)?Timestamp.valueOf(computer.getDiscontinued()):null);
+			preparedStatement.setInt(4, computer.getCompany().getId());
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			res=true;
 		
 		
 		}catch(SQLException e) {
-			log.printError(ERROR_ACCESS);
+			log.printError(ERROR_ACCESS+e.getMessage());
 		}
 		conn.close();
 		return res;
@@ -84,8 +83,9 @@ public class ComputerDao {
 			preparedStatement.setInt(1, id);
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
-		}catch(Exception e) {
-			e.printStackTrace();
+			res=true;
+		}catch(SQLException e) {
+			log.printError(ERROR_ACCESS+e.getMessage());
 		}
 		conn.close();
 		return res;
@@ -95,31 +95,8 @@ public class ComputerDao {
 		this.conn = Connexion.getInstance();
 		conn.connect();
 		boolean res=false, changes=false;
-		Optional<Computer> comp = find(computer.getId());
-		/*int tmpId=c.getId();
-		/*if(id>0) {
-			c.setId(id);
-			changes=true;
-		}
-		if(name!=null && name!="") {
-			c.setName(name);
-			changes=true;
-		}
-		if(introduced!=null) {
-			c.setIntroduced(introduced);
-			changes=true;
-		}
-		if(discontinued!=null) {
-			c.setDiscontinued(discontinued);
-			changes=true;
-		}
-		if(company_id>0) {
-			c.setManufacturer(company_id);
-			changes=true;
-		}
+		//Optional<Computer> comp = find(computer.getId());
 		
-		if(changes) {*/
-			String query="UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
 			try {
 				PreparedStatement preparedStatement = conn.getConn().prepareStatement(UPDATE_COMPUTER);
 				preparedStatement.setInt(5, computer.getId());
@@ -134,9 +111,11 @@ public class ComputerDao {
 				//preparedStatement.setTimestamp(4, (discontinued!=null)?Timestamp.valueOf(discontinued):(c.getDiscontinued()==null)?null:Timestamp.valueOf(c.getDiscontinued()));
 				//preparedStatement.setInt(4, (computer.getId()>0)?computer.getId():comp.getCompany().getId());
 				preparedStatement.executeUpdate();
+				preparedStatement.close();
+				
 				res=true;
 			} catch(SQLException e) {
-				log.printError(ERROR_ACCESS);
+				log.printError(ERROR_ACCESS + e.getMessage());
 			}
 			conn.close();
 			return res;
@@ -175,10 +154,11 @@ public class ComputerDao {
 			PreparedStatement preparedStatement = conn.getConn().prepareStatement(GET_COMPUTER_BY_ID);
 			preparedStatement.setInt(1, id);
 			ResultSet result = preparedStatement.executeQuery();
+			result.next();
 			computer = ComputerMapper.getInstance().getComputer(result);
 				
 		} catch (SQLException e){
-			log.printError(ERROR_ACCESS);
+			log.printError(ERROR_ACCESS + e.getMessage());
 		}
 		conn.close();
 		return Optional.ofNullable(computer);
@@ -200,13 +180,14 @@ public class ComputerDao {
 
 				computerlist.add(computer);
 			}
-
+			
 			statementSelecPage.close();
 			resListecomputer.close();
 
 		} catch (SQLException e) {
 			log.printError(ERROR_ACCESS);
 		}
+		conn.close();
 		return Optional.ofNullable(computerlist);
 }
 

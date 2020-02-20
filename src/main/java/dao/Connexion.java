@@ -14,6 +14,16 @@ import java.sql.SQLException;
 public class Connexion {
 	private static Connection conn;
 	
+	private static String urlh2 = "jdbc:h2:mem:test;INIT=RUNSCRIPT FROM 'src/test/resources/h2SQLgeneration.sql'";
+	private static String userh2 = "sa";
+	private static String passwdh2 = "";
+    private static String driverh2 = "org.h2.Driver";
+    
+    private static String url = "jdbc:mysql://localhost:3306/computer-database-db";
+    private static String user = "admincdb";
+    private static String passwd = "qwerty1234";
+    private static String driver = "com.mysql.cj.jdbc.Driver";
+	
 	private static  Connexion instance = null;
 	
 	private Connexion() {}
@@ -30,24 +40,47 @@ public class Connexion {
 	}
 	
 	public void connect() {
-		String url = "jdbc:mysql://localhost:3306/computer-database-db";
+		/*String url = "jdbc:mysql://localhost:3306/computer-database-db";
 	    String user = "admincdb";
 	    String passwd = "qwerty1234";
-	    
-        try{
-        	Class.forName("com.mysql.cj.jdbc.Driver");
-        	conn = DriverManager.getConnection(url, user, passwd);
+	    */
+        if(testing(System.getProperty("testState"))) {
+        	try{
+        		Class.forName("com.mysql.cj.jdbc.Driver");
+        		conn = DriverManager.getConnection(urlh2, userh2, passwdh2);
 
-        }catch(SQLException e){
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+        	}catch(SQLException e){
+        		e.printStackTrace();
+        	} catch (ClassNotFoundException e) {
+        		e.printStackTrace();
+        	}
+        }
+        else {
+        	try{
+        		Class.forName(driver);
+        		conn = DriverManager.getConnection(url, user, passwd);
+
+        	}catch(SQLException e){
+        		e.printStackTrace();
+        	} catch (ClassNotFoundException e) {
+        		e.printStackTrace();
+        	}
+        }
         
 	}
 	
 	public Connection getConn() {
         return conn;
+	}
+	
+	private static boolean testing(String testState) {
+		if(testState == null) {
+			return false;
+		}else if(testState.contentEquals("Running")){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public void close() {

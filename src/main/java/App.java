@@ -38,7 +38,7 @@ public class App {
 		  
 		    Company newCompany = new Company(42,"Research In Motion");
 		    Computer newComputer = new Computer(575,"tototo",null, null, newCompany);
-		    Computer upComputer = new Computer(601,"sixentun",null, null, newCompany);
+		    Computer upComputer = new Computer(604,"sixentun",null, null, newCompany);
 		    
 		    
 		    int action;
@@ -47,7 +47,7 @@ public class App {
 		  
 		    switch(action) {
 		    	case 0:
-		    		cli.pagineComputer();
+		    		System.out.println(ComputerService.getInstance().readAll());
 		    		break;
 		    	case 1:
 		    		cli.pagineCompany();
@@ -62,7 +62,7 @@ public class App {
 		    		break;
 		    	
 		    	case 4:
-		    		ComputerService.getInstance().delete(601);
+		    		ComputerService.getInstance().delete(10);
 		    		break;
 		    	case 5:
 		    		ComputerService.getInstance().update(upComputer);

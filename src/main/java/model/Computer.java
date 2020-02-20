@@ -14,13 +14,17 @@ public class Computer {
 	private String name;
 	private LocalDateTime introduced;
 	private LocalDateTime discontinued;
-	private int manufacturer;
 	private Company company;
 	
 	public Computer() {}
 	
 	public Computer(int id, String name, LocalDateTime introduced, LocalDateTime Discontinued, Company company) {
 		this.id = id;
+		this.name = name;
+		this.company=company;
+	}
+	
+	public Computer(String name, LocalDateTime introduced, LocalDateTime Discontinued, Company company) {
 		this.name = name;
 		this.company=company;
 	}
@@ -64,16 +68,9 @@ public class Computer {
 	@Override
 	public String toString() {
 		return "\nComputer [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
-				+ ", manufacturer=" + manufacturer + "]";
+				+ ", manufacturer=" + company.getId() + "]";
 	}
 
-	public int getManufacturer() {
-		return manufacturer;
-	}
-	public void setManufacturer(int manufacturer) {
-		this.manufacturer = manufacturer;
-	}
-	
 
 	public static class ComputerBuilder {
 		private int id;

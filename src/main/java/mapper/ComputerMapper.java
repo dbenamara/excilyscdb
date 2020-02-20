@@ -32,7 +32,7 @@ public class ComputerMapper {
 	public Computer getComputer(ResultSet resDetailcomputer) throws SQLException {
 		//this.computer = new Computer();
 		//this.company = new Company();
-		if (resDetailcomputer.next()){
+		
 			this.company = new Company.CompanyBuilder().setName(resDetailcomputer.getString("company.name"))
 					.setId(resDetailcomputer.getInt("company_id")).build();
 			
@@ -55,7 +55,7 @@ public class ComputerMapper {
 			company.setId(resDetailcomputer.getInt("company_id"));
 			company.setName(resDetailcomputer.getString("company.name"));
 			computer.setCompany(company);
-		*/}
+		*/
 		
 		return computer;
 	}
