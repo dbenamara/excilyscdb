@@ -44,9 +44,10 @@ public class Connexion {
 	    String user = "admincdb";
 	    String passwd = "qwerty1234";
 	    */
+		
         if(testing(System.getProperty("testState"))) {
         	try{
-        		Class.forName("com.mysql.cj.jdbc.Driver");
+        		Class.forName(driverh2);
         		conn = DriverManager.getConnection(urlh2, userh2, passwdh2);
 
         	}catch(SQLException e){
