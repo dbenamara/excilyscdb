@@ -32,7 +32,7 @@ public class ComputerDao {
 	
 	private ComputerDao() {
 		this.conn = Connexion.getInstance();
-		this.log = new Logging();
+		//this.log = new Logging();
 	}
 	
 	public final static ComputerDao getInstance() {
@@ -66,7 +66,7 @@ public class ComputerDao {
 		
 		
 		}catch(SQLException e) {
-			log.printError(ERROR_ACCESS+e.getMessage());
+			Logging.printError(ERROR_ACCESS+e.getMessage());
 		}
 		conn.close();
 		return res;
@@ -85,7 +85,7 @@ public class ComputerDao {
 			preparedStatement.close();
 			res=true;
 		}catch(SQLException e) {
-			log.printError(ERROR_ACCESS+e.getMessage());
+			Logging.printError(ERROR_ACCESS+e.getMessage());
 		}
 		conn.close();
 		return res;
@@ -115,7 +115,7 @@ public class ComputerDao {
 				
 				res=true;
 			} catch(SQLException e) {
-				log.printError(ERROR_ACCESS + e.getMessage());
+				Logging.printError(ERROR_ACCESS + e.getMessage());
 			}
 			conn.close();
 			return res;
@@ -134,11 +134,11 @@ public class ComputerDao {
 			System.out.println("TOTOTOTOTO");
 			ResultSet result = preparedStatement.executeQuery(); 
 		    while(result.next()) {
-		    	Computer computer = ComputerMapper.getInstance().getComputer(result);
+		    	Computer computer = ComputerMapper.getInstance().getComputer(result).get();
 		    	list.add(computer);
 		    }        
 		} catch (SQLException e) {
-			log.printError(ERROR_ACCESS);
+			Logging.printError(ERROR_ACCESS);
 		    }
 		conn.close();
 		return list;
@@ -155,10 +155,10 @@ public class ComputerDao {
 			preparedStatement.setInt(1, id);
 			ResultSet result = preparedStatement.executeQuery();
 			result.next();
-			computer = ComputerMapper.getInstance().getComputer(result);
+			computer = ComputerMapper.getInstance().getComputer(result).get();
 				
 		} catch (SQLException e){
-			log.printError(ERROR_ACCESS + e.getMessage());
+			Logging.printError(ERROR_ACCESS + e.getMessage());
 		}
 		conn.close();
 		return Optional.ofNullable(computer);
@@ -176,7 +176,7 @@ public class ComputerDao {
 			statementSelecPage.setInt(2, number);
 			ResultSet resListecomputer = statementSelecPage.executeQuery();
 			while (resListecomputer.next()) {
-				Computer computer = ComputerMapper.getInstance().getComputer(resListecomputer);
+				Computer computer = ComputerMapper.getInstance().getComputer(resListecomputer).get();
 
 				computerlist.add(computer);
 			}
@@ -185,7 +185,7 @@ public class ComputerDao {
 			resListecomputer.close();
 
 		} catch (SQLException e) {
-			log.printError(ERROR_ACCESS);
+			Logging.printError(ERROR_ACCESS);
 		}
 		conn.close();
 		return Optional.ofNullable(computerlist);

@@ -3,7 +3,10 @@ package mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
+import dto.CompanyDto;
+import dto.ComputerDto;
 import model.Company;
 import model.Computer;
 
@@ -29,7 +32,7 @@ public class ComputerMapper {
         return ComputerMapper.instance;
 	}
 	
-	public Computer getComputer(ResultSet resDetailcomputer) throws SQLException {
+	public Optional<Computer> getComputer(ResultSet resDetailcomputer) throws SQLException {
 		//this.computer = new Computer();
 		//this.company = new Company();
 		
@@ -57,7 +60,18 @@ public class ComputerMapper {
 			computer.setCompany(company);
 		*/
 		
-		return computer;
+		return Optional.ofNullable(computer);
+	}
+	
+	public ComputerDto computerToComputerDto(Computer computer) {
+		CompanyDto companyDto = new CompanyDto();
+		companyDto.setId(computer.getCompany().getId());
+		companyDto.setName(computer.getCompany().getName());
+
+		ComputerDto computerDto = new ComputerDto(computer.getName(),
+				computer.getIntroduced()==null?null:computer.getIntroduced().toString(),
+				computer.getDiscontinued()==null?null:computer.getDiscontinued().toString(),companyDto);
+		return computerDto;
 	}
 	
 }

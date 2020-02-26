@@ -22,7 +22,7 @@ public class Connexion {
     private static String url = "jdbc:mysql://localhost:3306/computer-database-db";
     private static String user = "admincdb";
     private static String passwd = "qwerty1234";
-    private static String driver = "com.mysql.cj.jdbc.Driver";
+    private static String driver = "com.mysql.jdbc.Driver";
 	
 	private static  Connexion instance = null;
 	
@@ -40,10 +40,6 @@ public class Connexion {
 	}
 	
 	public void connect() {
-		/*String url = "jdbc:mysql://localhost:3306/computer-database-db";
-	    String user = "admincdb";
-	    String passwd = "qwerty1234";
-	    */
 		
         if(testing(System.getProperty("testState"))) {
         	try{

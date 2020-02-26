@@ -106,7 +106,7 @@ public final class CompanyDao {
 			ResultSet resListeCompany = statementSelectPage.executeQuery();
 
 			while (resListeCompany.next()) {
-				companylist.add(CompanyMapper.getInstance().getCompany(resListeCompany));
+				companylist.add(CompanyMapper.getInstance().getCompany(resListeCompany).get());
 			}
 
 			statementSelectPage.close();

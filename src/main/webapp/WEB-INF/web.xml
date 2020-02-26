@@ -11,8 +11,19 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ServletEditComputer</servlet-name>
-		<url-pattern>/editComputer</url-pattern>
+		<url-pattern>/EditComputer</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ServletListComputers</servlet-name>
+		<servlet-class>servlet.ServletListComputers</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ServletListComputers</servlet-name>
+		<url-pattern>/ListComputers</url-pattern>
+	</servlet-mapping>
+	
 
 
 </web-app>
+

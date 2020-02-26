@@ -5,8 +5,12 @@ package mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
+import dto.CompanyDto;
+import dto.ComputerDto;
 import model.Company;
+import model.Computer;
 
 /**
  * @author excilys
@@ -29,7 +33,7 @@ public class CompanyMapper {
         return CompanyMapper.instance;
 	}
 	
-	public Company getCompany(ResultSet res){
+	public Optional<Company> getCompany(ResultSet res){
         //this.company = new Company();
 		try {
 			company = new Company.CompanyBuilder().setId(res.getInt("company.id")).
@@ -38,13 +42,14 @@ public class CompanyMapper {
 			e.printStackTrace();
 		}
         
-        
-        /*try {
-            company.setId(res.getInt("company.id"));
-			company.setName(res.getString("company.name"));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}*/
-        return company;
+        return Optional.ofNullable(company);
+	}
+	
+	public CompanyDto companyToCompanyDto(Company company) {
+		CompanyDto companyDto = new CompanyDto();
+		companyDto.setId(company.getId());
+		companyDto.setName(company.getName());
+		return companyDto;
+		
 	}
 }
