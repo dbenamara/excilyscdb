@@ -63,7 +63,6 @@ public class Cli {
 					entry = Integer.parseInt(line);
 					if(entry <min|| entry> max) {
 						System.out.println("Veuillez entrer un nombre du menu.");
-						//printMenu();
 						System.out.println("test");
 						entry = -1;
 					}
@@ -103,13 +102,10 @@ public class Cli {
 		computs = getOnePageOfComputer(offset, number);
 		System.out.println(computs);
 		while (condition) {
-			//tailleL = ComputerService.getInstance().getlength();
 			System.out.println("pres n for next p for previous page s to stop");
 			saisie = sc.next();
 			condition = (saisie.contentEquals("n")) || (saisie.contentEquals("p"));
-			//System.out.println("AVANT IF");
 			if (saisie.equals("n")) {
-				//System.out.println("APRES IF");
 				if ((tailleL - number) >= 20) {
 
 					offset += 20;

@@ -35,8 +35,8 @@ public class ComputerService {
 		ComputerDao.getInstance().delete(id);
 	}
 	
-	public void update(Computer comp) {
-		ComputerDao.getInstance().update(comp);
+	public Computer update(Computer comp) {
+		return ComputerDao.getInstance().update(comp);
 	}
 		
 	public List<Computer> readAll() {

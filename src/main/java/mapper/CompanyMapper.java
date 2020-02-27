@@ -34,7 +34,7 @@ public class CompanyMapper {
 	}
 	
 	public Optional<Company> getCompany(ResultSet res){
-        //this.company = new Company();
+
 		try {
 			company = new Company.CompanyBuilder().setId(res.getInt("company.id")).
 					setName(res.getString("company.name")).build();
@@ -51,5 +51,20 @@ public class CompanyMapper {
 		companyDto.setName(company.getName());
 		return companyDto;
 		
+
+	}
+	
+	public CompanyDto mapFromCompanyToCompanyDto(Company company) {
+		CompanyDto companyDto=new CompanyDto();
+		companyDto.setId(company.getId());
+		companyDto.setName(company.getName());
+		return companyDto;
+	}
+	public Company mapFromCompanyDtoToCompany(CompanyDto companyDto) {
+		Company company=new Company();
+		company.setId(companyDto.getId());
+		company.setName(companyDto.getName());
+		return company;
+
 	}
 }

@@ -24,7 +24,6 @@ public class ComputerDao {
 	private static final String UPDATE_COMPUTER = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
 	private static final String GET_ALL_COMPUTER = "SELECT computer.id , computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company ON company_id=company.id";
 	private static final String GET_COMPUTER_BY_ID = "SELECT * FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.id = ?;";
-	//private static final String GET_ALL_COMPUTER = "SELECT * FROM COMPUTER";
 	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id  LIMIT ?,?;";
 	
 	private Logging log;
@@ -32,7 +31,6 @@ public class ComputerDao {
 	
 	private ComputerDao() {
 		this.conn = Connexion.getInstance();
-		//this.log = new Logging();
 	}
 	
 	public final static ComputerDao getInstance() {
@@ -91,25 +89,18 @@ public class ComputerDao {
 		return res;
 	}
 	   
-	public boolean update(Computer computer) {
+	public Computer update(Computer computer) {
 		this.conn = Connexion.getInstance();
 		conn.connect();
 		boolean res=false, changes=false;
-		//Optional<Computer> comp = find(computer.getId());
 		
 			try {
 				PreparedStatement preparedStatement = conn.getConn().prepareStatement(UPDATE_COMPUTER);
 				preparedStatement.setInt(5, computer.getId());
-				//preparedStatement.setInt(1, (id>0)?id:c.getId());
 				preparedStatement.setString(1, (computer.getName()!=null)?computer.getName():null);
-				//preparedStatement.setString(2, (name!=null && name!="")?name:c.getName());
-				//preparedStatement.setString(2, (computer.getName()!=null)?computer.getName():(comp.getName()==null)?null:comp.getName());
-				//(comp.getIntroduced()==null)?null:Timestamp.valueOf(comp.getIntroduced()
 				preparedStatement.setTimestamp(2, (computer.getIntroduced()!=null)?Timestamp.valueOf(computer.getIntroduced()):null);
 				preparedStatement.setTimestamp(3, (computer.getDiscontinued()!=null)?Timestamp.valueOf(computer.getDiscontinued()):null);
 				preparedStatement.setInt(4, computer.getCompany().getId());
-				//preparedStatement.setTimestamp(4, (discontinued!=null)?Timestamp.valueOf(discontinued):(c.getDiscontinued()==null)?null:Timestamp.valueOf(c.getDiscontinued()));
-				//preparedStatement.setInt(4, (computer.getId()>0)?computer.getId():comp.getCompany().getId());
 				preparedStatement.executeUpdate();
 				preparedStatement.close();
 				
@@ -118,7 +109,7 @@ public class ComputerDao {
 				Logging.printError(ERROR_ACCESS + e.getMessage());
 			}
 			conn.close();
-			return res;
+			return find(computer.getId()).get();
 		
 	}
 		
@@ -131,7 +122,7 @@ public class ComputerDao {
 		Company company = new Company();
 		try {
 			PreparedStatement preparedStatement = conn.getConn().prepareStatement(GET_ALL_COMPUTER);
-			System.out.println("TOTOTOTOTO");
+			
 			ResultSet result = preparedStatement.executeQuery(); 
 		    while(result.next()) {
 		    	Computer computer = ComputerMapper.getInstance().getComputer(result).get();
