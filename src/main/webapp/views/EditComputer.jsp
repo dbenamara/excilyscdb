@@ -1,15 +1,3 @@
-<<<<<<< Updated upstream
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-=======
 <%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -44,12 +32,14 @@
 					<div class="form-group ">
                         	<c:out value="${successMessage}"></c:out>
                      </div>
-                    <form action="editComputerServlet" method="POST">
-                        <input type="hidden" id="id" name="id" value="${computerToUpdate.id }"/> <!-- TODO: Change this value with the computer id -->
+                    <form action="EditComputer" method="POST">
                         <fieldset>
+                           <input type="text" id="computerId" name="computerId" value="${computerToUpdate.id }"/> <!-- TODO: Change this value with the computer id -->
+                        
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
                                 <input type="text" class="form-control" id="computerName" name="computerName" value="${computerToUpdate.name }" placeholder="Computer name">
+                          		
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
@@ -86,6 +76,5 @@
             </div>
         </div>
     </section>
->>>>>>> Stashed changes
 </body>
 </html>

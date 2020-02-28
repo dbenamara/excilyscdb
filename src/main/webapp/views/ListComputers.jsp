@@ -107,57 +107,37 @@
 
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
-<<<<<<< Updated upstream
-            <ul class="pagination">
-                <li>
-                  <c:if test="${pageIterator>0}">
-                    <a href="ListComputer?pageIterator=${pageIterator-1}" aria-label="Previous">
-=======
+
         <c:if test="${pageIterator!=null}">
             <ul class="pagination">
                 <li>
                   <c:if test="${pageIterator>0}">
                     <a href="ListComputers?pageIterator=${pageIterator-1}" aria-label="Previous">
->>>>>>> Stashed changes
+
                       <span aria-hidden="true">&laquo;</span>
                   	</a>
                   </c:if>
               </li>
               <c:forEach  var = "i" begin = "1" end = "5">
-<<<<<<< Updated upstream
-              	<li><a href="ListComputer?pageIterator=${pageIterator+i}"><c:out value="${pageIterator+i}"></c:out></a></li>
-              </c:forEach>
-              
-              <li>
-              <c:if test="${pageIterator<maxPage}">
-                <a href="ListComputer?pageIterator=${pageIterator+1}" aria-label="Next">
-=======
               	<li><a href="ListComputers?pageIterator=${pageIterator+i}"><c:out value="${pageIterator+i}"></c:out></a></li>
               </c:forEach>
               
               <li>
               <c:if test="${pageIterator<nbPages}">
                 <a href="ListComputers?pageIterator=${pageIterator+1}" aria-label="Next">
->>>>>>> Stashed changes
+
                     <span aria-hidden="true">&raquo;</span>
                 </a>
                 </c:if>
             </li>
         </ul>
-<<<<<<< Updated upstream
-
-        <div class="btn-group btn-group-sm pull-right" role="group" >
-            <button type="button" class="btn btn-default">10</button>
-            <button type="button" class="btn btn-default">50</button>
-            <button type="button" class="btn btn-default">100</button>
-=======
         </c:if>
 
         <div class="btn-group btn-group-sm pull-right" role="group" >
             <button type="button" class="btn btn-default"><a href="ListComputers?taillePage=10">10</a></button>
             <button type="button" class="btn btn-default"><a href="ListComputers?taillePage=50">50</a></button>
             <button type="button" class="btn btn-default"><a href="ListComputers?taillePage=100">100</a></button>
->>>>>>> Stashed changes
+
         </div>
 
     </footer>

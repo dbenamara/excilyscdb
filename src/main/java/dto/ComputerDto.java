@@ -17,6 +17,7 @@ public class ComputerDto {
 	public ComputerDto(int id, String name, String introduced, String discontinued, CompanyDto company) {
 
 		//super();
+		this.id = id;
 		this.name = name;
 		this.introduced = introduced;
 		this.discontinued = discontinued;
@@ -52,4 +53,12 @@ public class ComputerDto {
 	public void setCompany(CompanyDto company) {
 		this.company = company;
 	}
+
+
+	@Override
+	public String toString() {
+		return "ComputerDto [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued="
+				+ discontinued + ", company=" + company + "]";
+	}
+	
 }

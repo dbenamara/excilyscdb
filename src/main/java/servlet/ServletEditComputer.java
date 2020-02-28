@@ -52,8 +52,9 @@ public class ServletEditComputer extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		CompanyDto companyDto = new CompanyDto(Integer.parseInt(request.getParameter("companyId")));
-		ComputerDto computerDto = new ComputerDto(Integer.parseInt(request.getParameter("id")),request.getParameter("computerName"),request.getParameter("introduced"),request.getParameter("discontinued"),companyDto);  
 		
+		ComputerDto computerDto = new ComputerDto(Integer.parseInt(request.getParameter("computerId")),request.getParameter("computerName"),request.getParameter("introduced"),request.getParameter("discontinued"),companyDto);  
+		System.out.println(computerDto);
 		try {
 			Computer computerToUpdate = ComputerMapper.getInstance().convertFromComputerDtoToComputer(computerDto);
 			computerToUpdate = ComputerService.getInstance().update(computerToUpdate);
