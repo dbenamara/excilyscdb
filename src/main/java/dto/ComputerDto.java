@@ -23,6 +23,12 @@ public class ComputerDto {
 		this.discontinued = discontinued;
 		this.company = company;
 	}
+	public ComputerDto( String name, String introduced, String discontinued, CompanyDto company) {
+		this.name = name;
+		this.introduced = introduced;
+		this.discontinued = discontinued;
+		this.company = company;
+	}
 	public int getId() {
 		return id;
 	}

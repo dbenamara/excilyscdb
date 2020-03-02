@@ -23,6 +23,15 @@
 		<url-pattern>/ListComputers</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>ServletAddComputer</servlet-name>
+		<servlet-class>servlet.ServletAddComputer</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ServletAddComputer</servlet-name>
+		<url-pattern>/AddComputer</url-pattern>
+	</servlet-mapping>
+	
 
 
 </web-app>

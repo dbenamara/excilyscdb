@@ -25,49 +25,43 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
-                    <div class="label label-default pull-right">
-                        id: <c:out value="${computerToUpdate.id }"></c:out>
-                    </div>
-                    <h1>Edit Computer</h1>
+                    <h1>Add Computer</h1>
 					<div class="form-group ">
-                        	<c:out value="${successMessage}"></c:out>
                      </div>
-                    <form action="EditComputer" method="POST">
+                    <form action="AddComputer" method="POST" name="AddComputer">
                         <fieldset>
-                           <input type="text" hidden id="computerId" name="computerId" value="${computerToUpdate.id }"/> <!-- TODO: Change this value with the computer id -->
+                           <!--  <input type="text" hidden id="computerId" name="computerId" value="${computerToUpdate.id }"/>  TODO: Change this value with the computer id -->
                         
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" value="${computerToUpdate.name }" placeholder="Computer name">
+                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name">
                           		
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" value="${computerToUpdate.introduced }" placeholder="Introduced date">
+                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" value="${computerToUpdate.discontinued }" placeholder="Discontinued date">
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date">
                             </div>
-                            <div class="form-group">
+                              <div class="form-group">
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" name="companyId">
 	                                <c:forEach items="${companies}" var="company">
-	                                	<c:if test="${ company.id==computerToUpdate.company.id}">
+	                                	<c:if test="${ company.id==1}">
 	                                		 <option value="${company.id}" selected><c:out value="${company.name}"></c:out></option>
 	                                	</c:if>
-	                                	<c:if test="${company.id!=computerToUpdate.company.id}">
+	                                	<c:if test="${company.id!=1}">
   	                                   		 <option value="${company.id}"><c:out value="${company.name}"></c:out></option>
-										</c:if>
+										</c:if>  	                                   		 
 	                                </c:forEach>
                                 </select>
                             </div>
                         </fieldset>
-                        <div class="form-group error">
-                        	<c:out value="${erreur}"></c:out>
-                        </div>
+                        
                         <div class="actions pull-right">
-                            <input type="submit" value="Edit" class="btn btn-primary">
+                            <a href="ServletListComputers"><input type="submit" value="Add" class="btn btn-primary"></a>
                             or
                             <a href="ServletListComputers" class="btn btn-default">Cancel</a>
                         </div>

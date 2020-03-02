@@ -156,7 +156,7 @@ public class ComputerDao {
 		
 	}
 
-	public  Optional<List<Computer>> getPageComputer(int offset, int number) {
+	public  List<Computer> getPageComputer(int offset, int number) {
 
 		List<Computer> computerlist = new ArrayList<Computer>();
 		this.conn = Connexion.getInstance();
@@ -179,7 +179,7 @@ public class ComputerDao {
 			Logging.printError(ERROR_ACCESS);
 		}
 		conn.close();
-		return Optional.ofNullable(computerlist);
+		return computerlist;
 }
 
 	

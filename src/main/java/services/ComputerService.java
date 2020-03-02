@@ -48,7 +48,7 @@ public class ComputerService {
 	}
 	
 	public List<Computer> getPageComputer(int offset, int number) {
-		return ComputerDao.getInstance().getPageComputer(offset, number).get();
+		return ComputerDao.getInstance().getPageComputer(offset, number);
 	}
 	
 	public int getlength() {

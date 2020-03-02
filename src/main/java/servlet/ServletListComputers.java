@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import Logger.Logging;
 import dao.Connexion;
 import dto.ComputerDto;
 import mapper.ComputerMapper;
@@ -62,7 +65,9 @@ public class ServletListComputers extends HttpServlet {
 			request.getRequestDispatcher("views/ListComputers.jsp").forward(request, response);
 			
 
-		} catch(Exception e) {}
+		} catch(ServletException e) {
+			Logging.printError(e.getMessage());
+		}
 		
 		
 		
