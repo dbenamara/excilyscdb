@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import exceptions.Logging;
 import mapper.ComputerMapper;
 import model.Company;
 import model.Computer;
-import Logger.Logging;
 /**
  * @author djamel
  *

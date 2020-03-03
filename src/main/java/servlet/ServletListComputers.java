@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import Logger.Logging;
 import dao.Connexion;
 import dto.ComputerDto;
+import exceptions.Logging;
 import mapper.ComputerMapper;
 import model.Computer;
 import services.ComputerService;
@@ -27,7 +27,6 @@ public class ServletListComputers extends HttpServlet {
 	private Connexion conn;
 	private int taillePage = 20;
 	private int pageIterator;
-	 
 
 	protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException{
 
@@ -67,12 +66,7 @@ public class ServletListComputers extends HttpServlet {
 
 		} catch(ServletException e) {
 			Logging.printError(e.getMessage());
-		}
-		
-		
-		
-		
-		
+		}	
 
 	}
 }

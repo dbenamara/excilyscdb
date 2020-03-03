@@ -3,9 +3,7 @@
 
 import java.util.List;
 
-//import org.apache.log4j.PropertyConfigurator;
-
-import Logger.Logging;
+import exceptions.Logging;
 import model.Company;
 import model.Computer;
 import services.CompanyService;

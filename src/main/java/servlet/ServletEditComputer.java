@@ -12,15 +12,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import Logger.Logging;
 import dto.CompanyDto;
 import dto.ComputerDto;
+import exceptions.Logging;
+import exceptions.ValidatorException.DateValidator;
+import exceptions.ValidatorException.NameValidator;
 import mapper.CompanyMapper;
 import mapper.ComputerMapper;
 import model.Company;
 import model.Computer;
 import services.CompanyService;
 import services.ComputerService;
+import validators.ComputerValidator;
 
 
 
@@ -34,7 +37,9 @@ public class ServletEditComputer extends HttpServlet {
 	private ComputerService service;
 	private ComputerDto compDto;
 	private Logging log;
-	private String PARSE_ERROR = "Parse error : ";
+	private static final String PARSE_ERROR = "Parse error : ";
+	private static final String DATE_ERROR = "Date error : ";
+	private static final String NAME_ERROR = "Name error : ";
 	
 	protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException{
 		if(request.getParameter("id")!=null) {
@@ -60,14 +65,19 @@ public class ServletEditComputer extends HttpServlet {
 		CompanyDto companyDto = new CompanyDto(Integer.parseInt(request.getParameter("companyId")));
 		
 		ComputerDto computerDto = new ComputerDto(request.getParameter("computerName"),request.getParameter("introduced"),request.getParameter("discontinued"),companyDto);  
-		
+		ComputerValidator computerValidator = new ComputerValidator();
 		try {
 			Computer computerToUpdate = ComputerMapper.getInstance().convertFromComputerDtoToComputer(computerDto);
+			computerValidator.validateComputer(computerToUpdate);
 			computerToUpdate = ComputerService.getInstance().update(computerToUpdate);
 			computerDto = ComputerMapper.getInstance().computerToComputerDto(computerToUpdate);
 			request.setAttribute("newComputer",computerDto);
 		} catch(ParseException e) {
 			Logging.printError(PARSE_ERROR + e.getMessage());
+		} catch(DateValidator e) {
+			Logging.printError(DATE_ERROR + e.getMessage());
+		} catch(NameValidator e) {
+			Logging.printError(NAME_ERROR + e.getMessage());
 		} finally {
 			idComputer=computerDto.getId();
 			doGet(request, response);
