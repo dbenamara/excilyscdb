@@ -46,9 +46,6 @@ public class ServletAddComputer extends HttpServlet {
 		companyList=CompanyService.getInstance().readAll();
 		
 		companyDtoList = companyList.stream().map(company -> CompanyMapper.getInstance().companyToCompanyDto(company)).collect(Collectors.toList());
-		//for(Company comp : companyList) {
-		//	companyDtoList.add(CompanyMapper.getInstance().companyToCompanyDto(comp));
-		//}
 		request.setAttribute("companies", companyDtoList);
 		request.getRequestDispatcher("views/AddComputer.jsp").forward(request, response);
 	}
@@ -61,8 +58,6 @@ public class ServletAddComputer extends HttpServlet {
 			Computer computerToAdd = ComputerMapper.getInstance().convertFromComputerDtoToComputer(computerDto);
 			computerValidator.validateComputer(computerToAdd);
 			ComputerService.getInstance().create(computerToAdd);
-			//computerDto = ComputerMapper.getInstance().computerToComputerDto(computerToAdd);
-			//request.setAttribute("newComputer",computerDto);
 		} catch(ParseException e) {
 			Logging.printError(PARSE_ERROR + e.getMessage());
 		} catch(DateValidator e) {
@@ -70,7 +65,6 @@ public class ServletAddComputer extends HttpServlet {
 		} catch(NameValidator e) {
 			Logging.printError(NAME_ERROR + e.getMessage());
 		} finally {
-			//idComputer=computerDto.getId();
 			response.sendRedirect("ListComputers");
 		}
 	}

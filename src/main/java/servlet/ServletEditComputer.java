@@ -51,27 +51,22 @@ public class ServletEditComputer extends HttpServlet {
 		List<Company> companyList=new ArrayList<>();
 		companyList=CompanyService.getInstance().readAll();
 		companyDtoList = companyList.stream().map(company -> CompanyMapper.getInstance().companyToCompanyDto(company)).collect(Collectors.toList());
-		/*for(Company comp : companyList) {
-			companyDtoList.add(CompanyMapper.getInstance().companyToCompanyDto(comp));
-		}*/
 		
 		request.setAttribute("companies", companyDtoList);
-		request.setAttribute("computerToUpdate", computerToUpdate);
+		request.setAttribute("computerToUpdate", compDto);
 		
 		request.getRequestDispatcher("views/EditComputer.jsp").forward(request, response);
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		CompanyDto companyDto = new CompanyDto(Integer.parseInt(request.getParameter("companyId")));
-		
 		ComputerDto computerDto = new ComputerDto(request.getParameter("computerName"),request.getParameter("introduced"),request.getParameter("discontinued"),companyDto);  
+		computerDto.setId(Integer.parseInt(request.getParameter("computerId")));
 		ComputerValidator computerValidator = new ComputerValidator();
 		try {
 			Computer computerToUpdate = ComputerMapper.getInstance().convertFromComputerDtoToComputer(computerDto);
 			computerValidator.validateComputer(computerToUpdate);
 			computerToUpdate = ComputerService.getInstance().update(computerToUpdate);
-			computerDto = ComputerMapper.getInstance().computerToComputerDto(computerToUpdate);
-			request.setAttribute("newComputer",computerDto);
 		} catch(ParseException e) {
 			Logging.printError(PARSE_ERROR + e.getMessage());
 		} catch(DateValidator e) {
@@ -80,7 +75,7 @@ public class ServletEditComputer extends HttpServlet {
 			Logging.printError(NAME_ERROR + e.getMessage());
 		} finally {
 			idComputer=computerDto.getId();
-			doGet(request, response);
+			response.sendRedirect("ListComputers");
 		}
 	}
 }

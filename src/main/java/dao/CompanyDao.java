@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ import model.Company;
  *
  */
 public final class CompanyDao {
-	private Connexion conn;
+	private Connection conn;
 	private static volatile CompanyDao instance = null;
 	private static final String CREATE_COMPANY = "INSERT INTO company (id,  name) VALUES(?, ?)";
 	private static final String GET_ALL_COMPANY = "SELECT * FROM company";
@@ -24,7 +25,6 @@ public final class CompanyDao {
 	private Logging log;
 	
 	private CompanyDao() {
-		this.conn = Connexion.getInstance();
 		this.log = new Logging();
 	}
 	
@@ -44,23 +44,22 @@ public final class CompanyDao {
 
 	
 	
-	public boolean create(Company company) /*throws SQLException*/ {
+	public boolean create(Company company) {
 		
-		this.conn = Connexion.getInstance();
-		conn.connect();
+		
 		boolean res=false;
 		try {
-			PreparedStatement preparedStatement = this.conn.getConn().prepareStatement(CREATE_COMPANY);
+			this.conn = Connexion.getInstance().getConn();
+			PreparedStatement preparedStatement = this.conn.prepareStatement(CREATE_COMPANY);
 			preparedStatement.setInt(1, company.getId());
 			preparedStatement.setString(2, company.getName());
 			preparedStatement.executeUpdate();
 			res=true;
+			conn.close();
 		
-		
-		}catch(Exception e) {
-			log.printError(ERROR_ACCESS);
+		}catch(SQLException e) {
+			log.printError(ERROR_ACCESS+e.getMessage());
 		}
-		conn.close();
 		return res;
 	}
 
@@ -72,35 +71,31 @@ public final class CompanyDao {
 		return false;
 	}	
 	public List<Company> readAll() {
-		conn = Connexion.getInstance();
-		conn.connect();
+		
 		List<Company> list = new ArrayList<Company>();
 		try {
-			System.out.println(conn);
-			System.out.println("TOTOTOTOTOTO");	
-			//System.out.println(conn.getConn());
-			PreparedStatement preparedStatement = conn.getConn().prepareStatement(GET_ALL_COMPANY);
+			this.conn = Connexion.getInstance().getConn();
+			PreparedStatement preparedStatement = conn.prepareStatement(GET_ALL_COMPANY);
 			ResultSet result = preparedStatement.executeQuery();
 		    while(result.next()) {
 		    	Company tmp = new Company(result.getInt("id"),result.getString("name"));
 		    	list.add(tmp);
 		    	
 		    	
-		    }        
+		    } 
+		    conn.close();
 		}catch (SQLException e) {
-			log.printError(ERROR_ACCESS);
+			log.printError(ERROR_ACCESS+e.getMessage());
 		}
-		conn.close();
 		return list;
 	}
 	
 	public List<Company> getPageCompany(int offset, int number) {
 
 		List<Company> companylist = new ArrayList<Company>();
-		this.conn = Connexion.getInstance();
-		conn.connect();
 		try {
-			PreparedStatement statementSelectPage = conn.getConn().prepareStatement(SELECT_COMPANY_PAGE);
+			this.conn = Connexion.getInstance().getConn();
+			PreparedStatement statementSelectPage = conn.prepareStatement(SELECT_COMPANY_PAGE);
 			statementSelectPage.setInt(1, offset);
 			statementSelectPage.setInt(2, number);
 			ResultSet resListeCompany = statementSelectPage.executeQuery();
@@ -110,11 +105,11 @@ public final class CompanyDao {
 			}
 
 			statementSelectPage.close();
+			conn.close();
 
 		} catch (SQLException e) {
-			log.printError(ERROR_ACCESS);
+			log.printError(ERROR_ACCESS+e.getMessage());
 		}
-		conn.close();
 		return companylist;
 	}
 

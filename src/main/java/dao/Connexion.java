@@ -1,4 +1,3 @@
-
 package dao;
 
 
@@ -7,6 +6,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import exceptions.Logging;
 
 
 /**
@@ -21,6 +24,9 @@ public class Connexion {
     private static String user;
     private static String passwd;
     private static String driver;
+    
+    private static HikariConfig config;
+	private static HikariDataSource ds;
     
     private static Properties properties;
 	
@@ -39,7 +45,7 @@ public class Connexion {
         return Connexion.instance;
 	}
 	
-	public void connect() {
+	/*public void connect() {
 		properties = new Properties();
 		
 		try {
@@ -63,17 +69,25 @@ public class Connexion {
         
 
 
-	}
+	}*/
 	
 	public Connection getConn() {
-        return conn;
+		config = new HikariConfig("/Connexion.properties");
+		ds = new HikariDataSource( config );
+			
+		try {
+			return ds.getConnection();
+		}catch(SQLException e) {
+			Logging.printError(e.getMessage());
+		}
+		return null;
 	}
 	
-	public void close() {
+	/*public void close() {
         try {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-	}
+	}*/
 }

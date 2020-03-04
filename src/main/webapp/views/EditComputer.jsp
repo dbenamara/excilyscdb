@@ -14,6 +14,9 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="css/font-awesome.css" rel="stylesheet" media="screen">
 <link href="css/main.css" rel="stylesheet" media="screen">
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
 </head>
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
@@ -43,11 +46,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" value="${computerToUpdate.introduced }" placeholder="Introduced date">
+                                <input type="text" class="form-control" id="introduced" name="introduced" placeholder="Introduced date">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" value="${computerToUpdate.discontinued }" placeholder="Discontinued date">
+                                <input type="text" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
@@ -76,5 +79,8 @@
             </div>
         </div>
     </section>
+     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="js/Validation.js"></script>
 </body>
 </html>

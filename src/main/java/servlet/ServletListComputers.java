@@ -3,6 +3,7 @@ package servlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -69,4 +70,23 @@ public class ServletListComputers extends HttpServlet {
 		}	
 
 	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String listToDelete = request.getParameter("selection");
+		List<String> deleteSelectionArray = Arrays.asList(listToDelete.split(","));
+		for (String s : deleteSelectionArray) {
+			try {
+				ComputerService.getInstance().delete(Integer.parseInt(s));
+			} catch (NumberFormatException e) {
+				Logging.printError(e.getMessage());
+			}
+		}
+	
+		doGet(request, response);
+	
+	}	
 }
+
+
+
+

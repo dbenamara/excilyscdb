@@ -3,13 +3,14 @@ package mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.text.ParseException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Optional;
 
 import dto.CompanyDto;
 import dto.ComputerDto;
@@ -40,8 +41,10 @@ public class ComputerMapper {
 	
 
 	public static LocalDateTime convertStringToLocalDateTime(String dateString) throws ParseException {
-        Date dateToConvert=new SimpleDateFormat("yyyy-MM-dd").parse(dateString);  
-	    return new java.sql.Date(dateToConvert.getTime()).toLocalDate().atStartOfDay();
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDateTime date = LocalDate.parse(dateString,dtf).atTime(LocalTime.MIDNIGHT);
+		//Date dateToConvert=new SimpleDateFormat("yyyy-mm-dd").parse(dateString);  
+	    return date;
 	}
 	
 	public Optional<Computer> getComputer(ResultSet resDetailcomputer) throws SQLException {

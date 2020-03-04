@@ -23,7 +23,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard.html"> Application - Computer Database </a>
+            <a class="navbar-brand" href="ListComputers"> Application - Computer Database </a>
         </div>
     </header>
 
@@ -49,7 +49,7 @@
         </div>
 
         <form id="deleteForm" action="#" method="POST">
-            <input type="hidden" name="selection" value="">
+            <input type="hidden" name="selection" id="selection" value="">
         </form>
 
         <div class="container" style="margin-top: 10px;">
@@ -62,7 +62,7 @@
                         <th class="editMode" style="width: 60px; height: 22px;">
                             <input type="checkbox" id="selectall" /> 
                             <span style="vertical-align: top;">
-                                 -  <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();">
+                                 -  <a href="ListComputers" id="deleteSelected" onclick="$.fn.deleteSelected();">
                                         <i class="fa fa-trash-o fa-lg"></i>
                                     </a>
                             </span>
@@ -89,7 +89,7 @@
                  <c:forEach items="${computerList}" var="computer">
                     <tr>
                         <td class="editMode">
-                            <input type="checkbox" name="cb" class="cb" value="0">
+                            <input type="checkbox" name="cb" class="cb" value="${computer.id}">
                         </td>
                         <td>
                             <a href="EditComputer?id=${computer.id}" onclick=""><c:out value="${computer.name}"></c:out></a>
@@ -97,7 +97,6 @@
                         <td><c:out value="${computer.introduced}"></c:out></td>
                         <td><c:out value="${computer.discontinued}"></c:out></td>
                         <td><c:out value="${computer.company.name}"></c:out></td>
-
                     </tr>  
                     </c:forEach> 
                 </tbody>

@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ import model.Computer;
  */
 public class ComputerDao {
 	private static volatile ComputerDao instance = null;
-	private Connexion conn;
+	private Connection conn;
 	private static final String CREATE_COMPUTER = "INSERT INTO computer (  name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
 	private static final String DELETE_COMPUTER = "DELETE FROM computer WHERE id=?;";
 	private static final String UPDATE_COMPUTER = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
@@ -29,9 +30,7 @@ public class ComputerDao {
 	private Logging log;
 	private static final String ERROR_ACCESS = "Impossible de se connecter à la bdd";
 	
-	private ComputerDao() {
-		this.conn = Connexion.getInstance();
-	}
+	private ComputerDao() {}
 	
 	public final static ComputerDao getInstance() {
 
@@ -50,10 +49,10 @@ public class ComputerDao {
 	
 	public boolean create(Computer computer) {
 		boolean res=false;
-		this.conn = Connexion.getInstance();
-		conn.connect();
+		
 		try {
-			PreparedStatement preparedStatement = conn.getConn().prepareStatement(CREATE_COMPUTER);
+			this.conn = Connexion.getInstance().getConn();
+			PreparedStatement preparedStatement = conn.prepareStatement(CREATE_COMPUTER);
 			preparedStatement.setString(1, computer.getName());
 			preparedStatement.setTimestamp(2, (computer.getIntroduced()!=null)?Timestamp.valueOf(computer.getIntroduced()):null);
 			preparedStatement.setTimestamp(3, (computer.getDiscontinued()!=null)?Timestamp.valueOf(computer.getDiscontinued()):null);
@@ -61,41 +60,35 @@ public class ComputerDao {
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			res=true;
-		
-		
+			conn.close();
 		}catch(SQLException e) {
 			Logging.printError(ERROR_ACCESS+e.getMessage());
 		}
-		conn.close();
 		return res;
 	}
 	
 	
 	public boolean delete(int id) {
 		boolean res=false;
-		this.conn = Connexion.getInstance();
-		conn.connect();
-		String query = "DELETE FROM computer WHERE id=?;";
 		try {
-			PreparedStatement preparedStatement = conn.getConn().prepareStatement(DELETE_COMPUTER);
+			this.conn = Connexion.getInstance().getConn();
+			PreparedStatement preparedStatement = conn.prepareStatement(DELETE_COMPUTER);
 			preparedStatement.setInt(1, id);
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			res=true;
+			conn.close();
 		}catch(SQLException e) {
 			Logging.printError(ERROR_ACCESS+e.getMessage());
 		}
-		conn.close();
 		return res;
 	}
 	   
 	public Computer update(Computer computer) {
-		this.conn = Connexion.getInstance();
-		conn.connect();
-		boolean res=false, changes=false;
 		
 			try {
-				PreparedStatement preparedStatement = conn.getConn().prepareStatement(UPDATE_COMPUTER);
+				this.conn = Connexion.getInstance().getConn();
+				PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_COMPUTER);
 				preparedStatement.setInt(5, computer.getId());
 				preparedStatement.setString(1, (computer.getName()!=null)?computer.getName():null);
 				preparedStatement.setTimestamp(2, (computer.getIntroduced()!=null)?Timestamp.valueOf(computer.getIntroduced()):null);
@@ -104,11 +97,10 @@ public class ComputerDao {
 				preparedStatement.executeUpdate();
 				preparedStatement.close();
 				
-				res=true;
+				conn.close();
 			} catch(SQLException e) {
-				Logging.printError(ERROR_ACCESS + e.getMessage());
+				Logging.printError("DANS UPDATE" + e.getMessage());
 			}
-			conn.close();
 			return find(computer.getId()).get();
 		
 	}
@@ -117,11 +109,11 @@ public class ComputerDao {
 	
 	public List<Computer> readAll() {
 		List<Computer> list = new ArrayList<Computer>();
-		this.conn = Connexion.getInstance();
-		conn.connect();
+		
 		Company company = new Company();
 		try {
-			PreparedStatement preparedStatement = conn.getConn().prepareStatement(GET_ALL_COMPUTER);
+			this.conn = Connexion.getInstance().getConn();
+			PreparedStatement preparedStatement = conn.prepareStatement(GET_ALL_COMPUTER);
 			
 			ResultSet result = preparedStatement.executeQuery(); 
 		    while(result.next()) {
@@ -129,20 +121,18 @@ public class ComputerDao {
 		    	list.add(computer);
 		    }        
 		} catch (SQLException e) {
-			Logging.printError(ERROR_ACCESS);
-		    }
-		conn.close();
+			Logging.printError(ERROR_ACCESS+e.getMessage());
+		}
 		return list;
 	}
 	
 	public Optional<Computer> find(int id) {
 		Computer computer = new Computer();
 		Company company = new Company();
-		String query = "SELECT * FROM computer WHERE id=?";
-		this.conn = Connexion.getInstance();
-		conn.connect();
+		
 		try {
-			PreparedStatement preparedStatement = conn.getConn().prepareStatement(GET_COMPUTER_BY_ID);
+			this.conn = Connexion.getInstance().getConn();
+			PreparedStatement preparedStatement = conn.prepareStatement(GET_COMPUTER_BY_ID);
 			preparedStatement.setInt(1, id);
 			ResultSet result = preparedStatement.executeQuery();
 			result.next();
@@ -151,7 +141,6 @@ public class ComputerDao {
 		} catch (SQLException e){
 			Logging.printError(ERROR_ACCESS + e.getMessage());
 		}
-		conn.close();
 		return Optional.ofNullable(computer);
 		
 	}
@@ -159,10 +148,10 @@ public class ComputerDao {
 	public  List<Computer> getPageComputer(int offset, int number) {
 
 		List<Computer> computerlist = new ArrayList<Computer>();
-		this.conn = Connexion.getInstance();
-		conn.connect();
+
 		try  {
-			PreparedStatement statementSelecPage = conn.getConn().prepareStatement(GET_PAGE_COMPUTER);
+			this.conn = Connexion.getInstance().getConn();
+			PreparedStatement statementSelecPage = conn.prepareStatement(GET_PAGE_COMPUTER);
 			statementSelecPage.setInt(1, offset);
 			statementSelecPage.setInt(2, number);
 			ResultSet resListecomputer = statementSelecPage.executeQuery();
@@ -176,9 +165,8 @@ public class ComputerDao {
 			resListecomputer.close();
 
 		} catch (SQLException e) {
-			Logging.printError(ERROR_ACCESS);
+			Logging.printError(ERROR_ACCESS+e.getMessage());
 		}
-		conn.close();
 		return computerlist;
 }
 

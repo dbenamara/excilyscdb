@@ -45,8 +45,6 @@ public class ComputerDaoTest {
 	 */
 	@Test
 	public void testCreate() {
-		this.conn = Connexion.getInstance();
-		conn.connect();
 		try {
 
 			
@@ -56,10 +54,9 @@ public class ComputerDaoTest {
 			assertTrue(ComputerDao.getInstance().create(newComputer));
 			
 
-		} catch(Exception e) {
+		} catch(AssertionError e) {
 			fail("Problème à la création : " + e.getMessage());
 		}
-		conn.close();
 	}
 
 	/**
@@ -67,18 +64,15 @@ public class ComputerDaoTest {
 	 */
 	@Test
 	public void testDelete() {
-		this.conn = Connexion.getInstance();
-		conn.connect();
 		try {
 			newComputer = ComputerDao.getInstance().find(50).get();
 			assertTrue(newComputer != null);
 			assertTrue(newComputer.getName().equals("Commodore PET"));
 			assertTrue(ComputerDao.getInstance().delete(50));
 			
-		} catch(Exception e) {
+		} catch(AssertionError e) {
 			fail("Erreur au delete "+ e.getMessage());
 		}
-		conn.close();
 	}
 
 	/**
@@ -88,8 +82,6 @@ public class ComputerDaoTest {
 	public void testUpdate() {
 		newComputer = ComputerDao.getInstance().find(30).get();
 		newComputer.setName("poulet");
-		//assertTrue(ComputerDao.getInstance().update(newComputer));
-		//assertTrue(ComputerDao.getInstance().find(newComputer.getId()).get().getName().equals("poulet"));
 	}
 
 	/**
@@ -105,8 +97,6 @@ public class ComputerDaoTest {
 	 */
 	@Test
 	public void testFind() {
-		this.conn = Connexion.getInstance();
-		conn.connect();
 		try {
 			newComputer = ComputerDao.getInstance().find(1).get();
 			assertTrue(newComputer.getId() == 1);
@@ -115,11 +105,9 @@ public class ComputerDaoTest {
 			assertTrue(newComputer.getDiscontinued() == null);
 			assertTrue(newComputer.getCompany().getId() == 1);
 			assertTrue(newComputer.getCompany().getName().equals("Apple Inc."));
-		} catch (Exception e) {
+		} catch (AssertionError e) {
 			fail("Erreur de la méthode find : " + e.getMessage());
 		}
-		conn.close();
-		//fail("Not yet implemented");
 	}
 
 	/**
