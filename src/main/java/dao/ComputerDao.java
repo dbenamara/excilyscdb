@@ -25,6 +25,7 @@ public class ComputerDao {
 	private static final String UPDATE_COMPUTER = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
 	private static final String GET_ALL_COMPUTER = "SELECT computer.id , computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company ON company_id=company.id";
 	private static final String GET_COMPUTER_BY_ID = "SELECT * FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.id = ?;";
+	private static final String GET_COMPUTER_BY_NAME = "SELECT * FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.name LIKE ? ;";
 	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id  LIMIT ?,?;";
 	
 	private Logging log;
@@ -119,7 +120,8 @@ public class ComputerDao {
 		    while(result.next()) {
 		    	Computer computer = ComputerMapper.getInstance().getComputer(result).get();
 		    	list.add(computer);
-		    }        
+		    }  
+		    conn.close();
 		} catch (SQLException e) {
 			Logging.printError(ERROR_ACCESS+e.getMessage());
 		}
@@ -137,7 +139,7 @@ public class ComputerDao {
 			ResultSet result = preparedStatement.executeQuery();
 			result.next();
 			computer = ComputerMapper.getInstance().getComputer(result).get();
-				
+			conn.close();
 		} catch (SQLException e){
 			Logging.printError(ERROR_ACCESS + e.getMessage());
 		}
@@ -163,12 +165,35 @@ public class ComputerDao {
 			
 			statementSelecPage.close();
 			resListecomputer.close();
-
+			conn.close();
 		} catch (SQLException e) {
 			Logging.printError(ERROR_ACCESS+e.getMessage());
 		}
 		return computerlist;
-}
+	}
+	
+	public List<Computer> findName(String name) {
+		Computer computer;
+		ResultSet result;
+		List<Computer> computerList = new ArrayList<Computer>();
+
+		try {
+			this.conn = Connexion.getInstance().getConn();
+			PreparedStatement stmtFindName = conn.prepareStatement(GET_COMPUTER_BY_NAME);
+			stmtFindName.setString(1, "%"+name+"%");
+			result = stmtFindName.executeQuery();
+			while (result.next()) {
+				computer = ComputerMapper.getInstance().getComputer(result).get();
+				computerList.add(computer);
+			}
+			stmtFindName.close();
+			result.close();
+			conn.close();
+		} catch (SQLException e) {
+			Logging.printError(ERROR_ACCESS+e.getMessage());
+		}
+		return computerList;
+	}
 
 	
 }

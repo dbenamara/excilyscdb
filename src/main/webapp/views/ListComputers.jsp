@@ -29,14 +29,27 @@
 
     <section id="main">
         <div class="container">
-            <h1 id="homeTitle">
-            	<c:out value="${nbComputer}"> </c:out> Computers found
-            </h1>
+        	
+        	<c:choose>
+				<c:when test="${ search != null }">
+					
+					<h1 id="homeTitle">
+					${ nbComputer } Computers found for "${ search }"
+					</h1>
+				</c:when>
+				<c:otherwise>
+					<h1 id="homeTitle">
+						${ nbComputer } computers found
+					</h1>
+				</c:otherwise>
+			</c:choose>
+        	
+            
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
-                    <form id="searchForm" action="#" method="GET" class="form-inline">
+                    <form id="searchForm" action="#" method="POST" class="form-inline">
 
-                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
+                        <input type="search" id="searchbox" name="searchForm" class="form-control" placeholder="Search name" />
                         <input type="submit" id="searchsubmit" value="Filter by name"
                         class="btn btn-primary" />
                     </form>

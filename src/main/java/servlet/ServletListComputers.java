@@ -1,10 +1,11 @@
 package servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import dao.Connexion;
 import dto.ComputerDto;
 import exceptions.Logging;
+import mapper.CompanyMapper;
 import mapper.ComputerMapper;
 import model.Computer;
 import services.ComputerService;
@@ -73,16 +75,28 @@ public class ServletListComputers extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String listToDelete = request.getParameter("selection");
-		List<String> deleteSelectionArray = Arrays.asList(listToDelete.split(","));
-		for (String s : deleteSelectionArray) {
-			try {
-				ComputerService.getInstance().delete(Integer.parseInt(s));
-			} catch (NumberFormatException e) {
-				Logging.printError(e.getMessage());
+		if(listToDelete != null && !listToDelete.isEmpty()) {
+			List<String> deleteSelectionArray = Arrays.asList(listToDelete.split(","));
+			for (String s : deleteSelectionArray) {
+				try {
+					ComputerService.getInstance().delete(Integer.parseInt(s));
+				} catch (NumberFormatException e) {
+					Logging.printError(e.getMessage());
+				}
 			}
 		}
-	
-		doGet(request, response);
+		
+		String search = request.getParameter("searchForm");
+		if(search != null && !search.isEmpty()) {
+			List<Computer> computerList = ComputerService.getInstance().findName(search);
+			List<ComputerDto> ComputerDtoList= computerList.stream().map(computer -> ComputerMapper.getInstance().computerToComputerDto(computer)).collect(Collectors.toList());;
+			request.setAttribute("computerList", ComputerDtoList);
+			request.setAttribute("search", search);
+			int nbComputer= ComputerDtoList.size();
+			System.out.println(nbComputer);
+			request.setAttribute("nbComputer", nbComputer);
+		}
+		request.getRequestDispatcher("views/ListComputers.jsp").forward(request, response);
 	
 	}	
 }

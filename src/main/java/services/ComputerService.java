@@ -51,6 +51,10 @@ public class ComputerService {
 		return ComputerDao.getInstance().getPageComputer(offset, number);
 	}
 	
+	public List<Computer> findName(String name) {
+		return ComputerDao.getInstance().findName(name);
+	}
+	
 	public int getlength() {
 		return readAll().size();
 }

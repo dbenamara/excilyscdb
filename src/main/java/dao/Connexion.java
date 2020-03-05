@@ -45,32 +45,6 @@ public class Connexion {
         return Connexion.instance;
 	}
 	
-	/*public void connect() {
-		properties = new Properties();
-		
-		try {
-			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("Connexion.properties"));
-			url = properties.getProperty("url");
-			user = properties.getProperty("user");
-			passwd = properties.getProperty("passwd");
-			driver = properties.getProperty("driver");
-			
-    		Class.forName(driver);
-    		conn = DriverManager.getConnection(url, user, passwd);
-		} catch(IOException e) {
-			e.printStackTrace();
-		} catch(SQLException e){
-    		e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-    		e.printStackTrace();
-    	}
-		
-        
-        
-
-
-	}*/
-	
 	public Connection getConn() {
 		config = new HikariConfig("/Connexion.properties");
 		ds = new HikariDataSource( config );
@@ -83,11 +57,4 @@ public class Connexion {
 		return null;
 	}
 	
-	/*public void close() {
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-	}*/
 }
