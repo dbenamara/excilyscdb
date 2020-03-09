@@ -84,7 +84,7 @@ public class Cli {
 	}
 	
 	public List<Computer> getOnePageOfComputer(int offset, int number) {
-		return (ComputerService.getInstance().getPageComputer(offset, number));
+		return (ComputerService.getInstance().getPageComputer(offset, number,"cp.name"));
 	}
 	public List<Company> getOnePageOfCompany(int offset, int number) {
 		return (CompanyService.getInstance().getPageCompany(offset, number));

@@ -47,12 +47,16 @@ public class ComputerService {
 		return ComputerDao.getInstance().find(id).get();
 	}
 	
-	public List<Computer> getPageComputer(int offset, int number) {
-		return ComputerDao.getInstance().getPageComputer(offset, number);
+	public List<Computer> getPageComputer(int offset, int number, String orderBy) {
+		return ComputerDao.getInstance().getPageComputer(offset, number, orderBy);
 	}
 	
-	public List<Computer> findName(String name) {
-		return ComputerDao.getInstance().findName(name);
+	public List<Computer> findName(String name, int offset, int number, String orderBy) {
+		return ComputerDao.getInstance().findName(name, offset,number, orderBy);
+	}
+	
+	public boolean deleteAllComputerSelected(List<Integer> idList) {
+		return ComputerDao.getInstance().deleteAllComputerSelected(idList);
 	}
 	
 	public int getlength() {

@@ -99,7 +99,24 @@
                 </thead>
                 <!-- Browse attribute computers -->
                 <tbody id="results">
-                 <c:forEach items="${computerList}" var="computer">
+                <c:choose>
+				<c:when test="${search != null}">
+                 	<c:forEach items="${computerSearchedList}" var="computer">
+                    	<tr>
+                        	<td class="editMode">
+                            	<input type="checkbox" name="cb" class="cb" value="${computer.id}">
+                        	</td>
+                        	<td>
+                            	<a href="EditComputer?id=${computer.id}" onclick=""><c:out value="${computer.name}"></c:out></a>
+                        	</td>
+                        	<td><c:out value="${computer.introduced}"></c:out></td>
+                        	<td><c:out value="${computer.discontinued}"></c:out></td>
+                        	<td><c:out value="${computer.company.name}"></c:out></td>
+                    	</tr>  
+                    	</c:forEach>
+               </c:when>
+				<c:otherwise>
+					 <c:forEach items="${computerList}" var="computer">
                     <tr>
                         <td class="editMode">
                             <input type="checkbox" name="cb" class="cb" value="${computer.id}">
@@ -111,7 +128,9 @@
                         <td><c:out value="${computer.discontinued}"></c:out></td>
                         <td><c:out value="${computer.company.name}"></c:out></td>
                     </tr>  
-                    </c:forEach> 
+                    </c:forEach>
+				</c:otherwise>
+				</c:choose>
                 </tbody>
             </table>
         </div>

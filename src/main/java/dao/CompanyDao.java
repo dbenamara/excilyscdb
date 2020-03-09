@@ -46,16 +46,15 @@ public final class CompanyDao {
 	
 	public boolean create(Company company) {
 		
-		
 		boolean res=false;
-		try {
-			this.conn = Connexion.getInstance().getConn();
-			PreparedStatement preparedStatement = this.conn.prepareStatement(CREATE_COMPANY);
+		try (Connection connect = Connexion.getInstance().getConn();){
+			PreparedStatement preparedStatement = connect.prepareStatement(CREATE_COMPANY);
 			preparedStatement.setInt(1, company.getId());
 			preparedStatement.setString(2, company.getName());
 			preparedStatement.executeUpdate();
 			res=true;
-			conn.close();
+			preparedStatement.close();
+			
 		
 		}catch(SQLException e) {
 			log.printError(ERROR_ACCESS+e.getMessage());
@@ -73,17 +72,18 @@ public final class CompanyDao {
 	public List<Company> readAll() {
 		
 		List<Company> list = new ArrayList<Company>();
-		try {
-			this.conn = Connexion.getInstance().getConn();
-			PreparedStatement preparedStatement = conn.prepareStatement(GET_ALL_COMPANY);
+		try (Connection connect = Connexion.getInstance().getConn();){
+	
+			PreparedStatement preparedStatement = connect.prepareStatement(GET_ALL_COMPANY);
 			ResultSet result = preparedStatement.executeQuery();
 		    while(result.next()) {
 		    	Company tmp = new Company(result.getInt("id"),result.getString("name"));
 		    	list.add(tmp);
 		    	
 		    	
-		    } 
-		    conn.close();
+		    }
+		    preparedStatement.close();
+		    result.close();
 		}catch (SQLException e) {
 			log.printError(ERROR_ACCESS+e.getMessage());
 		}
@@ -93,9 +93,9 @@ public final class CompanyDao {
 	public List<Company> getPageCompany(int offset, int number) {
 
 		List<Company> companylist = new ArrayList<Company>();
-		try {
-			this.conn = Connexion.getInstance().getConn();
-			PreparedStatement statementSelectPage = conn.prepareStatement(SELECT_COMPANY_PAGE);
+		try(Connection connect = Connexion.getInstance().getConn();) {
+			
+			PreparedStatement statementSelectPage = connect.prepareStatement(SELECT_COMPANY_PAGE);
 			statementSelectPage.setInt(1, offset);
 			statementSelectPage.setInt(2, number);
 			ResultSet resListeCompany = statementSelectPage.executeQuery();
@@ -105,7 +105,7 @@ public final class CompanyDao {
 			}
 
 			statementSelectPage.close();
-			conn.close();
+			resListeCompany.close();
 
 		} catch (SQLException e) {
 			log.printError(ERROR_ACCESS+e.getMessage());

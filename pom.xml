@@ -18,7 +18,13 @@
 		<slf4j-version>1.7.5</slf4j-version>
 		<HikariCP-version>3.4.2</HikariCP-version>
 		<junit-version>4.13</junit-version>
+		<mockito-all-version>1.9.5</mockito-all-version>
 		<my-sql-connector-java-version>8.0.19</my-sql-connector-java-version>
+		<h2-version>1.4.200</h2-version>
+		<servlet-api-version>2.5</servlet-api-version>
+		<taglibs-standard-spec-version>1.2.5</taglibs-standard-spec-version>
+		<taglibs-standard-impl-version>1.2.5</taglibs-standard-impl-version>
+		<jstl-version>1.1.2</jstl-version>
 	</properties>
 
 	<dependencies>
@@ -48,44 +54,44 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>1.9.5</version>
+			<version>${mockito-all-version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.200</version>
+			<version>${h2-version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<!-- <scope>provided</scope> -->
+			<version>${servlet-api-version}</version>
+			
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
-			<version>1.1.2</version>
-		</dependency><!-- change version -->
+			<version>${jstl-version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.taglibs</groupId>
 			<artifactId>taglibs-standard-spec</artifactId>
-			<version>1.2.5</version>
+			<version>${taglibs-standard-spec-version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.taglibs</groupId>
 			<artifactId>taglibs-standard-impl</artifactId>
-			<version>1.2.5</version>
+			<version>${taglibs-standard-impl-version}</version>
 		</dependency>
 		
 		<dependency>
     		<groupId>com.zaxxer</groupId>
     		<artifactId>HikariCP</artifactId>
-    		<version>3.4.2</version>
+    		<version>${HikariCP-version}</version>
 		</dependency>
 
 
@@ -93,14 +99,12 @@
 
 	<build>
 		<finalName>my-cdb</finalName>
-		<pluginManagement><!-- lock down plugins versions to avoid using Maven 
-				defaults (may be moved to parent pom) -->
+		<pluginManagement>
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>3.1.0</version>
 				</plugin>
-				<!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging -->
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>3.0.2</version>
