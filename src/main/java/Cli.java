@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import dao.CompanyDao;
 import model.Company;
 import model.Computer;
 import services.CompanyService;
@@ -20,9 +21,11 @@ public class Cli {
 	private Scanner sc;
 	int nbComputer;
 	
+	
 	public Cli() {
 		this.sc = new Scanner(System.in);
 		nbComputer = (574);
+	
 	}
 	
 	public void printMenu() {
@@ -83,12 +86,12 @@ public class Cli {
 		return entry;
 	}
 	
-	public List<Computer> getOnePageOfComputer(int offset, int number) {
-		return (ComputerService.getInstance().getPageComputer(offset, number,"cp.name"));
+	/*public List<Computer> getOnePageOfComputer(int offset, int number) {
+		return (new ComputerService().getPageComputer(offset, number,"cp.name"));
 	}
 	public List<Company> getOnePageOfCompany(int offset, int number) {
 		return (CompanyService.getInstance().getPageCompany(offset, number));
-	}
+	}*/
 	
 	
 	public void pagineComputer() {
@@ -97,39 +100,39 @@ public class Cli {
 		String saisie;
 		int offset = 0;
 		int number = 20;
-		int tailleL = ComputerService.getInstance().getlength();
+		//int tailleL = ComputerService.getInstance().getlength();
 
-		computs = getOnePageOfComputer(offset, number);
+		//computs = getOnePageOfComputer(offset, number);
 		System.out.println(computs);
 		while (condition) {
 			System.out.println("pres n for next p for previous page s to stop");
 			saisie = sc.next();
 			condition = (saisie.contentEquals("n")) || (saisie.contentEquals("p"));
 			if (saisie.equals("n")) {
-				if ((tailleL - number) >= 20) {
+				//if ((tailleL - number) >= 20) {
 
 					offset += 20;
 					number += 20;
-					computs = getOnePageOfComputer(offset, number);
+					//computs = getOnePageOfComputer(offset, number);
 				} else {
 					System.out.println("vous etes a la derniere page!");
 				}
 			}
-			if (saisie.equals("p")) { //TOTOTO
+		//	if (saisie.equals("p")) { //TOTOTO
 				if (offset < 20) {
 					System.out.println("vous etes a la premiere page!");
 				} else {
 					offset -= 20;
 					number -= 20;
-					computs = getOnePageOfComputer(offset, number);
+				//	computs = getOnePageOfComputer(offset, number);
 				}
 
 			}
-			System.out.println(computs);
-		}
-	}
+		//	System.out.println(computs);
+		//}
+	//}
 	
-	public void pagineCompany() {
+	/*public void pagineCompany() {
 		List<Company> company = new ArrayList<Company>();
 		boolean condition = true;
 		String saisie;
@@ -165,5 +168,5 @@ public class Cli {
 			}
 			System.out.println(company);
 		}
-}
+}*/
 }

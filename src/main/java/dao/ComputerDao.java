@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import exceptions.Logging;
 import mapper.ComputerMapper;
 import model.Company;
@@ -17,9 +20,10 @@ import model.Computer;
  * @author djamel
  *
  */
+@Repository
 public class ComputerDao {
 	private static volatile ComputerDao instance = null;
-	private Connection conn;
+	private Connexion conn;
 	private static final String CREATE_COMPUTER = "INSERT INTO computer (  name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
 	private static final String DELETE_COMPUTER = "DELETE FROM computer WHERE id=?;";
 	private static final String DELETE_COMPUTER_SELECTED = "DELETE FROM computer WHERE id=?;";
@@ -30,31 +34,23 @@ public class ComputerDao {
 	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id ORDER BY ";
 	private static final String FIND_PAGE = " LIMIT ?, ?;";
 	private static final String DELETE_ALL_COMPUTER_SELECTED = "DELETE FROM computer WHERE id IN(";
+	protected static final String DELETE_COMPUTER_FROM_COMPANY = "DELETE FROM computer WHERE company_id=?;";
+	
 	
 	private Logging log;
 	private static final String ERROR_ACCESS = "Impossible de se connecter à la bdd";
 	
-	private ComputerDao() {}
 	
-	public final static ComputerDao getInstance() {
-
-		if (ComputerDao.instance == null) {
-
-			synchronized (ComputerDao.class) {
-				if (ComputerDao.instance == null) {
-					ComputerDao.instance = new ComputerDao();
-				}
-			}
-		}
-
-		return ComputerDao.instance;
+	public ComputerDao(Connexion conn) {
+		this.conn = conn;
 	}
+	
 
 	
 	public boolean create(Computer computer) {
 		boolean res=false;
 		
-		try(Connection connect = Connexion.getInstance().getConn()) {
+		try(Connection connect = conn.getConn()) {
 			PreparedStatement preparedStatement = connect.prepareStatement(CREATE_COMPUTER);
 			preparedStatement.setString(1, computer.getName());
 			preparedStatement.setTimestamp(2, (computer.getIntroduced()!=null)?Timestamp.valueOf(computer.getIntroduced()):null);
@@ -72,13 +68,12 @@ public class ComputerDao {
 	
 	public boolean delete(int id) {
 		boolean res=false;
-		try(Connection connect = Connexion.getInstance().getConn();) {
+		try(Connection connect = conn.getConn()) {
 			PreparedStatement preparedStatement = connect.prepareStatement(DELETE_COMPUTER);
 			preparedStatement.setInt(1, id);
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			res=true;
-			conn.close();
 		}catch(SQLException e) {
 			Logging.printError(ERROR_ACCESS+e.getMessage());
 		}
@@ -87,7 +82,7 @@ public class ComputerDao {
 	
 	public boolean deleteAllComputerSelected(List<Integer> idList) {
 		boolean res =false;
-		try(Connection connect = Connexion.getInstance().getConn();) {
+		try(Connection connect = conn.getConn()) {
 			String interro = "";
 			for(int i=0;i<idList.size()-1;i++) {
 				interro += "?,";
@@ -112,7 +107,7 @@ public class ComputerDao {
 	   
 	public Computer update(Computer computer) {
 		
-			try(Connection connect = Connexion.getInstance().getConn();) {
+			try(Connection connect = conn.getConn()) {
 				PreparedStatement preparedStatement = connect.prepareStatement(UPDATE_COMPUTER);
 				preparedStatement.setInt(5, computer.getId());
 				preparedStatement.setString(1, (computer.getName()!=null)?computer.getName():null);
@@ -135,13 +130,13 @@ public class ComputerDao {
 		List<Computer> list = new ArrayList<Computer>();
 		
 		Company company = new Company();
-		try(Connection connect = Connexion.getInstance().getConn();) {
+		try(Connection connect = conn.getConn()) {
 			
 			PreparedStatement preparedStatement = connect.prepareStatement(GET_ALL_COMPUTER);
 			
 			ResultSet result = preparedStatement.executeQuery(); 
 		    while(result.next()) {
-		    	Computer computer = ComputerMapper.getInstance().getComputer(result).get();
+		    	Computer computer = new ComputerMapper().getComputer(result).get();
 		    	list.add(computer);
 		    }  
 		} catch (SQLException sql) {
@@ -154,13 +149,13 @@ public class ComputerDao {
 		Computer computer = new Computer();
 		Company company = new Company();
 		
-		try(Connection connect = Connexion.getInstance().getConn();) {
+		try(Connection connect = conn.getConn()) {
 			//this.conn = Connexion.getInstance().getConn();
 			PreparedStatement preparedStatement = connect.prepareStatement(GET_COMPUTER_BY_ID);
 			preparedStatement.setInt(1, id);
 			ResultSet result = preparedStatement.executeQuery();
 			result.next();
-			computer = ComputerMapper.getInstance().getComputer(result).get();
+			computer = new ComputerMapper().getComputer(result).get();
 			
 		} catch (SQLException sql){
 			Logging.printError(ERROR_ACCESS + sql.getMessage());
@@ -173,13 +168,13 @@ public class ComputerDao {
 
 		List<Computer> computerlist = new ArrayList<Computer>();
 
-		try (Connection connect = Connexion.getInstance().getConn();) {
+		try (Connection connect = conn.getConn()) {
 			PreparedStatement statementSelecPage = connect.prepareStatement(GET_PAGE_COMPUTER+orderBy+FIND_PAGE);
 			statementSelecPage.setInt(1, offset);
 			statementSelecPage.setInt(2, number);
 			ResultSet resListecomputer = statementSelecPage.executeQuery();
 			while (resListecomputer.next()) {
-				Computer computer = ComputerMapper.getInstance().getComputer(resListecomputer).get();
+				Computer computer = new ComputerMapper().getComputer(resListecomputer).get();
 
 				computerlist.add(computer);
 			}
@@ -197,15 +192,15 @@ public class ComputerDao {
 		ResultSet result;
 		List<Computer> computerList = new ArrayList<Computer>();
 
-		try (Connection connect = Connexion.getInstance().getConn();){
+		try (Connection connect = conn.getConn()){
 			//this.conn = Connexion.getInstance().getConn();
 			PreparedStatement stmtFindName = connect.prepareStatement(GET_COMPUTER_BY_NAME+ orderBy+FIND_PAGE);
 			stmtFindName.setString(1, "%"+name+"%");
 			stmtFindName.setInt(2, offset);
 			stmtFindName.setInt(3, number);
 			result = stmtFindName.executeQuery();
-			while (result.next()) {
-				computer = ComputerMapper.getInstance().getComputer(result).get();
+			while(result.next()) {
+				computer = new ComputerMapper().getComputer(result).get();
 				computerList.add(computer);
 			}
 			stmtFindName.close();
@@ -215,6 +210,9 @@ public class ComputerDao {
 		}
 		return computerList;
 	}
+	
+	
 
 	
 }
+

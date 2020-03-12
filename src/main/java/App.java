@@ -1,14 +1,12 @@
 
 
 
-import java.util.List;
-
-import exceptions.Logging;
+import mapper.ComputerMapper;
 import model.Company;
 import model.Computer;
 import services.CompanyService;
 import services.ComputerService;
-
+import springconfig.AppConfig;
 
 
 /**
@@ -17,12 +15,17 @@ import services.ComputerService;
  */
 public class App {
 
-		
+		private ComputerMapper computerMapper;
+		private ComputerService computerService;
+		private CompanyService companyService;
 	
+		
+		
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {		
+		new AppConfig();
 		try {
 			
 		         
@@ -30,8 +33,8 @@ public class App {
 		    Cli cli = new Cli();
 		    cli.printWelcome();
 		   
-		    List<Computer> listComputer = ComputerService.getInstance().readAll();
-		    List<Company> listCompany = CompanyService.getInstance().readAll();
+		 //   List<Computer> listComputer = ComputerService.getInstance().readAll();
+		   // List<Company> listCompany = CompanyService.getInstance().readAll();
 		  
 		    Company newCompany = new Company(42,"Research In Motion");
 		    Computer newComputer = new Computer(575,"tototo",null, null, newCompany);
@@ -44,25 +47,25 @@ public class App {
 		  
 		    switch(action) {
 		    	case 0:
-		    		System.out.println(ComputerService.getInstance().readAll());
+		    		//System.out.println(ComputerService.getInstance().readAll());
 		    		break;
 		    	case 1:
-		    		cli.pagineCompany();
+		    		//cli.pagineCompany();
 		    		break;
 		    	case 2:
 		    		int idComputer = cli.getComputerId();
-		    		System.out.println(ComputerService.getInstance().find(idComputer));
+		    		//System.out.println(ComputerService.getInstance().find(idComputer));
 		    		break;
 		    	case 3:
-		    		ComputerService.getInstance().create(newComputer);
+		    		//ComputerService.getInstance().create(newComputer);
 		    		cli.increaseNbComputer();
 		    		break;
 		    	
 		    	case 4:
-		    		ComputerService.getInstance().delete(10);
+		    		//ComputerService.getInstance().delete(10);
 		    		break;
 		    	case 5:
-		    		ComputerService.getInstance().update(upComputer);
+		    	//	ComputerService.getInstance().update(upComputer);
 		    		break;
 		    	case 6:
 		    		break quit;
@@ -72,7 +75,7 @@ public class App {
 		    	
 		    }
 		  }while(true);
-		    
+		  
 		    
 		    
 		    

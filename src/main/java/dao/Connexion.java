@@ -1,11 +1,15 @@
 package dao;
 
 
-import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import javax.sql.DataSource;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -16,6 +20,7 @@ import exceptions.Logging;
  * @author djamel
  *
  */
+@Component
 public class Connexion {
 	private static Connection conn;
 	
@@ -32,29 +37,25 @@ public class Connexion {
 	
 	private static  Connexion instance = null;
 	
-	private Connexion() {}
+	public Connexion() {}
 	
-	public  static Connexion getInstance() {
-        if (Connexion.instance == null) {
-           synchronized(Connexion.class) {
-             if (Connexion.instance == null) {
-            	 Connexion.instance = new Connexion();
-             }
-           }
-        }
-        return Connexion.instance;
+	@Bean
+	public static DataSource hikariDataSource() {
+		config = new HikariConfig("/Connexion.properties");
+		ds = new HikariDataSource(config);
+		return ds;
 	}
+	
+	
+	
+
 	
 	public Connection getConn() {
-		config = new HikariConfig("/Connexion.properties");
-		ds = new HikariDataSource( config );
-			
 		try {
-			return ds.getConnection();
-		}catch(SQLException e) {
-			Logging.printError(e.getMessage());
+			conn = hikariDataSource().getConnection();
+		} catch(SQLException sqle) {
+			Logging.printError(sqle.getMessage());
 		}
-		return null;
+		return conn;
 	}
-	
 }

@@ -26,24 +26,13 @@ public class ComputerMapper {
 	private Company company;
 	private static volatile ComputerMapper instance = null;
 	
-	private ComputerMapper() {}
+	public ComputerMapper() {}
 	
-	public final static ComputerMapper getInstance() {
-		if (ComputerMapper.instance == null) {
-			synchronized(CompanyMapper.class) {
-				if (ComputerMapper.instance == null) {
-					ComputerMapper.instance = new ComputerMapper();
-				}
-           }
-        }
-        return ComputerMapper.instance;
-	}
-	
+
 
 	public static LocalDateTime convertStringToLocalDateTime(String dateString) throws ParseException {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDateTime date = LocalDate.parse(dateString,dtf).atTime(LocalTime.MIDNIGHT);
-		//Date dateToConvert=new SimpleDateFormat("yyyy-mm-dd").parse(dateString);  
 	    return date;
 	}
 	
@@ -78,7 +67,7 @@ public class ComputerMapper {
 	}
 	
 	public static Computer convertFromComputerDtoToComputer(ComputerDto computerDto) throws ParseException {
-		Computer computer = new Computer.ComputerBuilder().setId(computerDto.getId()).setName(computerDto.getName()).setIntroduced(convertStringToLocalDateTime(computerDto.getIntroduced())).setDiscontinued(convertStringToLocalDateTime(computerDto.getDiscontinued())).setCompany(CompanyMapper.getInstance().mapFromCompanyDtoToCompany(computerDto.getCompany())).build();   
+		Computer computer = new Computer.ComputerBuilder().setId(computerDto.getId()).setName(computerDto.getName()).setIntroduced(convertStringToLocalDateTime(computerDto.getIntroduced())).setDiscontinued(convertStringToLocalDateTime(computerDto.getDiscontinued())).setCompany(new CompanyMapper().mapFromCompanyDtoToCompany(computerDto.getCompany())).build();   
 		return computer;
 
 	}

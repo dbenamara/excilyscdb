@@ -2,39 +2,37 @@ package services;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import dao.CompanyDao;
 import model.Company;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 
 /**
  * @author djamel
  *
  */
+@Service
 public class CompanyService {
 	private static volatile CompanyService instance = null;
-	private CompanyService() {}
+	private CompanyDao companyDao;
 	
-	public final static CompanyService getInstance() {
-
-		if (CompanyService.instance == null) {
-
-			synchronized (CompanyService.class) {
-				if (CompanyService.instance == null) {
-					CompanyService.instance = new CompanyService();
-				}
-			}
-		}
-
-		return CompanyService.instance;	
+	public CompanyService(CompanyDao companyDao) {
+		this.companyDao = companyDao;
 	}
 	
+	
 	public List<Company> readAll() {
-		return CompanyDao.getInstance().readAll();
+		return companyDao.readAll();
 	}
 	
 	public int getlength(){
-		return readAll().size();
+		return this.readAll().size();
 	}
 	public List<Company> getPageCompany(int offset, int number){
-		return CompanyDao.getInstance().getPageCompany(offset, number);
+		return companyDao.getPageCompany(offset, number);
 	}
 }

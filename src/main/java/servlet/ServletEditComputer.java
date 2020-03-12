@@ -7,10 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import dto.CompanyDto;
 import dto.ComputerDto;
@@ -34,23 +38,33 @@ import validators.ComputerValidator;
 public class ServletEditComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private int idComputer=5;
-	private ComputerService service;
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
+	private CompanyService companyService;
 	private ComputerDto compDto;
 	private Logging log;
 	private static final String PARSE_ERROR = "Parse error : ";
 	private static final String DATE_ERROR = "Date error : ";
 	private static final String NAME_ERROR = "Name error : ";
 	
+	
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+	}
+	
 	protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException{
 		if(request.getParameter("id")!=null) {
 			idComputer=	Integer.parseInt(request.getParameter("id"));
 		}
-		Computer computerToUpdate=ComputerService.getInstance().find(idComputer);
-		compDto = ComputerMapper.getInstance().computerToComputerDto(computerToUpdate);
+		Computer computerToUpdate=computerService.find(idComputer);
+		compDto = new ComputerMapper().computerToComputerDto(computerToUpdate);
 		List<CompanyDto> companyDtoList=new ArrayList<>();
 		List<Company> companyList=new ArrayList<>();
-		companyList=CompanyService.getInstance().readAll();
-		companyDtoList = companyList.stream().map(company -> CompanyMapper.getInstance().companyToCompanyDto(company)).collect(Collectors.toList());
+		companyList=companyService.readAll();
+		companyDtoList = companyList.stream().map(company -> new CompanyMapper().companyToCompanyDto(company)).collect(Collectors.toList());
 		
 		request.setAttribute("companies", companyDtoList);
 		request.setAttribute("computerToUpdate", compDto);
@@ -64,9 +78,9 @@ public class ServletEditComputer extends HttpServlet {
 		computerDto.setId(Integer.parseInt(request.getParameter("computerId")));
 		ComputerValidator computerValidator = new ComputerValidator();
 		try {
-			Computer computerToUpdate = ComputerMapper.getInstance().convertFromComputerDtoToComputer(computerDto);
+			Computer computerToUpdate = new ComputerMapper().convertFromComputerDtoToComputer(computerDto);
 			computerValidator.validateComputer(computerToUpdate);
-			computerToUpdate = ComputerService.getInstance().update(computerToUpdate);
+			computerToUpdate = computerService.update(computerToUpdate);
 		} catch(ParseException e) {
 			Logging.printError(PARSE_ERROR + e.getMessage());
 		} catch(DateValidator e) {

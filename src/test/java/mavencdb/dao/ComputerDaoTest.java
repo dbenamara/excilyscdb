@@ -3,32 +3,39 @@ package mavencdb.dao;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.sql.SQLException;
-
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dao.ComputerDao;
 import dao.Connexion;
+import mapper.ComputerMapper;
 import model.Company;
 import model.Computer;
+import springconfig.AppConfig;
 
 /**
  * @author Djamel
  *
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {AppConfig.class})
 public class ComputerDaoTest {
 	private Connexion conn;
 	Company newCompany = new Company(42,"Research In Motion");
 	private Computer newComputer;
+	private ComputerDao computerDao;
+	private ComputerMapper computerMapper;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("testState", "Running");
 	}
 
 	/**
@@ -36,7 +43,12 @@ public class ComputerDaoTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		System.setProperty("testState", "Ending");
+	}
+	
+	@Autowired
+	public void setComputerDao(ComputerDao computerDao, ComputerMapper computerMapper) {
+		this.computerDao = computerDao;
+		this.computerMapper = computerMapper; 
 	}
 
 
@@ -51,7 +63,7 @@ public class ComputerDaoTest {
 			newComputer = new Computer.ComputerBuilder().setIdCompagny(new Company.CompanyBuilder().setId(5).build())
 					.setId(51).setDiscontinued(null).setIntroduced(null).setName("toto").build();
 			System.out.println(newComputer);
-			assertTrue(ComputerDao.getInstance().create(newComputer));
+			assertTrue(computerDao.create(newComputer));
 			
 
 		} catch(AssertionError e) {
@@ -65,10 +77,10 @@ public class ComputerDaoTest {
 	@Test
 	public void testDelete() {
 		try {
-			newComputer = ComputerDao.getInstance().find(50).get();
+			newComputer = computerDao.find(50).get();
 			assertTrue(newComputer != null);
 			assertTrue(newComputer.getName().equals("Commodore PET"));
-			assertTrue(ComputerDao.getInstance().delete(50));
+			assertTrue(computerDao.delete(50));
 			
 		} catch(AssertionError e) {
 			fail("Erreur au delete "+ e.getMessage());
@@ -80,7 +92,7 @@ public class ComputerDaoTest {
 	 */
 	@Test
 	public void testUpdate() {
-		newComputer = ComputerDao.getInstance().find(30).get();
+		newComputer = computerDao.find(30).get();
 		newComputer.setName("poulet");
 	}
 
@@ -98,7 +110,7 @@ public class ComputerDaoTest {
 	@Test
 	public void testFind() {
 		try {
-			newComputer = ComputerDao.getInstance().find(1).get();
+			newComputer = computerDao.find(1).get();
 			assertTrue(newComputer.getId() == 1);
 			assertTrue(newComputer.getName().equals("MacBook Pro 15.4 inch"));
 			assertTrue(newComputer.getIntroduced() == null);

@@ -25,6 +25,8 @@
 		<taglibs-standard-spec-version>1.2.5</taglibs-standard-spec-version>
 		<taglibs-standard-impl-version>1.2.5</taglibs-standard-impl-version>
 		<jstl-version>1.1.2</jstl-version>
+		<spring-version>5.2.4.RELEASE</spring-version>
+		
 	</properties>
 
 	<dependencies>
@@ -50,6 +52,13 @@
 			<version>${junit-version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring-version}</version>
+            <scope>test</scope>
+        </dependency>
 
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -81,6 +90,19 @@
 			<artifactId>taglibs-standard-spec</artifactId>
 			<version>${taglibs-standard-spec-version}</version>
 		</dependency>
+		
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-web</artifactId>
+    		<version>${spring-version}</version>
+		</dependency>
+
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-context</artifactId>
+    		<version>${spring-version}</version>
+		</dependency>
+		
 
 		<dependency>
 			<groupId>org.apache.taglibs</groupId>
