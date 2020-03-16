@@ -2,26 +2,23 @@ package springconfig;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.web.context.AbstractContextLoaderInitializer;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-
-
 
 /**
- * @author Djamel
+ * @author djamel
  *
  */
-
 @Configuration
-@ComponentScan(basePackages = {"services","dao","servlet","test.mavencdb.dao","mapper"})
+@ComponentScan("dao")
 @PropertySource("classpath:Connexion.properties")
-public class AppConfig extends AbstractContextLoaderInitializer {
+public class JdbcConfig {
+	
+
 	private String mysqlUrl = "jdbcUrl";
 
 
@@ -43,10 +40,4 @@ public class AppConfig extends AbstractContextLoaderInitializer {
         
         return dataSource;
     }
-	
-	protected WebApplicationContext createRootApplicationContext() {
-		 AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-		 rootContext.register(AppConfig.class);
-		 return rootContext;
-	}
 }

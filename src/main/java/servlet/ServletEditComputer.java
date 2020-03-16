@@ -80,7 +80,7 @@ public class ServletEditComputer extends HttpServlet {
 		try {
 			Computer computerToUpdate = new ComputerMapper().convertFromComputerDtoToComputer(computerDto);
 			computerValidator.validateComputer(computerToUpdate);
-			computerToUpdate = computerService.update(computerToUpdate);
+			computerService.update(computerToUpdate);
 		} catch(ParseException e) {
 			Logging.printError(PARSE_ERROR + e.getMessage());
 		} catch(DateValidator e) {

@@ -18,8 +18,8 @@ import model.Computer;
  * @author Djamel
  *
  */
-@Repository
-public class ComputerDao {
+
+public class SpringComputerDao {
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private ComputerMapper computerMapper = new ComputerMapper();
@@ -38,7 +38,7 @@ public class ComputerDao {
 
 	
 	
-	public ComputerDao(DataSource dataSource) {
+	public SpringComputerDao(DataSource dataSource) {
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	}
 	
@@ -49,10 +49,6 @@ public class ComputerDao {
 				.addValue("discontinued", computer.getDiscontinued())
 				.addValue("companyId", computer.getCompany().getId());
 		this.namedParameterJdbcTemplate.update(CREATE_COMPUTER, namedParameters);
-	}
-	
-	public List<Computer> readAll() {
-		return this.namedParameterJdbcTemplate.query(GET_ALL_COMPUTER, this.computerMapper);
 	}
 	
 	public void delete(int id) {
@@ -80,6 +76,11 @@ public class ComputerDao {
 				.addValue("company_id", computer.getCompany().getId());
 		this.namedParameterJdbcTemplate.update(UPDATE_COMPUTER, namedParameters);
 	}
+	
+	public List<Computer> getAllComputer() {
+		return this.namedParameterJdbcTemplate.query(GET_ALL_COMPUTER, this.computerMapper);
+	}
+
 	
 	public  List<Computer> getPageComputer(int offset, int number, String orderBy) {
 		orderBy = GET_PAGE_COMPUTER + orderBy;

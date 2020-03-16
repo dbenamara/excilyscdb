@@ -18,7 +18,6 @@ public class ComputerService {
 	private ComputerDao computerDao;
 	
 	
-	@Autowired
 	public ComputerService(ComputerDao computerDao) {
 		this.computerDao = computerDao;
 	}
@@ -33,8 +32,8 @@ public class ComputerService {
 		computerDao.delete(id);
 	}
 	
-	public Computer update(Computer comp) {
-		return computerDao.update(comp);
+	public void update(Computer comp) {
+		computerDao.update(comp);
 	}
 		
 	public List<Computer> readAll() {
@@ -53,8 +52,8 @@ public class ComputerService {
 		return computerDao.findName(name, offset,number, orderBy);
 	}
 	
-	public boolean deleteAllComputerSelected(List<Integer> idList) {
-		return computerDao.deleteAllComputerSelected(idList);
+	public void deleteAllComputerSelected(List<Integer> idList) {
+		computerDao.deleteAllComputerSelected(idList);
 	}
 	
 	public int getlength() {

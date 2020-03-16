@@ -1,131 +1,76 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import exceptions.Logging;
 import mapper.CompanyMapper;
 import model.Company;
+
+
+
 
 /**
  * @author djamel
  *
  */
 @Repository
-public final class CompanyDao {
-	private Connexion conn;
-	private static volatile CompanyDao instance = null;
-	private static final String CREATE_COMPANY = "INSERT INTO company (id,  name) VALUES(?, ?)";
+public class CompanyDao {
+	
+	private static final String CREATE_COMPANY = "INSERT INTO company name = :name";
 	private static final String GET_ALL_COMPANY = "SELECT * FROM company";
-	private static final String SELECT_COMPANY_PAGE = "SELECT * FROM company LIMIT ?,? ";
+	private static final String SELECT_COMPANY_PAGE = "SELECT * FROM company LIMIT :limit,:offset ";
 	private static final String ERROR_ACCESS = "Impossible de se connecter à la bdd";
-	private static final String DELETE_COMPANY = "DELETE FROM company WHERE id=?;";
+	private static final String DELETE_COMPANY = "DELETE FROM company WHERE id = :id;";
 	
-	private Logging log;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private ComputerDao computerDao;
+	private CompanyMapper companyMapper = new CompanyMapper();
 	
-	
-	public CompanyDao(Connexion conn) {
-		this.conn = conn;
+	public void SpringCompanyDao(DataSource dataSource,ComputerDao computerDao) {
+	    this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+	    this.computerDao = computerDao;
 	}
 	
 	
-	public boolean create(Company company) {
-		
-		boolean res=false;
-		try (Connection connect = conn.getConn()){
-			PreparedStatement preparedStatement = connect.prepareStatement(CREATE_COMPANY);
-			preparedStatement.setInt(1, company.getId());
-			preparedStatement.setString(2, company.getName());
-			preparedStatement.executeUpdate();
-			res=true;
-			preparedStatement.close();
-			
-		
-		}catch(SQLException e) {
-			Logging.printError(ERROR_ACCESS+e.getMessage());
-		}
-		return res;
+	public void create(Company company) {
+		Map<String, String> namedParameters = new HashMap<>();
+		namedParameters.put("name", company.getName());
+		this.namedParameterJdbcTemplate.update(CREATE_COMPANY, namedParameters);
 	}
-
+	
 	public List<Company> readAll() {
-		
-		List<Company> list = new ArrayList<Company>();
-		try (Connection connect = conn.getConn()){
-	
-			PreparedStatement preparedStatement = connect.prepareStatement(GET_ALL_COMPANY);
-			ResultSet result = preparedStatement.executeQuery();
-		    while(result.next()) {
-		    	Company tmp = new Company(result.getInt("id"),result.getString("name"));
-		    	list.add(tmp);
-		    	
-		    	
-		    }
-		    preparedStatement.close();
-		    result.close();
-		}catch (SQLException e) {
-			Logging.printError(ERROR_ACCESS+e.getMessage());
-		}
-		return list;
+		SqlParameterSource namedParameters = new MapSqlParameterSource();
+		return this.namedParameterJdbcTemplate.query(GET_ALL_COMPANY, namedParameters, this.companyMapper);
 	}
 	
 	public List<Company> getPageCompany(int offset, int number) {
 
-		List<Company> companylist = new ArrayList<Company>();
-		try(Connection connect = conn.getConn()) {
-			
-			PreparedStatement statementSelectPage = connect.prepareStatement(SELECT_COMPANY_PAGE);
-			statementSelectPage.setInt(1, offset);
-			statementSelectPage.setInt(2, number);
-			ResultSet resListeCompany = statementSelectPage.executeQuery();
-
-			while (resListeCompany.next()) {
-				companylist.add(new CompanyMapper().getCompany(resListeCompany).get());
-			}
-
-			statementSelectPage.close();
-			resListeCompany.close();
-
-		} catch (SQLException e) {
-			Logging.printError(ERROR_ACCESS+e.getMessage());
-		}
-		return companylist;
+		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("limit", number).addValue("offset", offset);
+		return this.namedParameterJdbcTemplate.queryForList(SELECT_COMPANY_PAGE, namedParameters, Company.class);
 	}
-
+	
+	
+	@Transactional
 	public void deleteCompany(int id) {
-		ResultSet result;
-		Connection connect=null;
-		try {
-			connect = conn.getConn();
-			connect.setAutoCommit(false);
-			PreparedStatement preparedStatementComputer = connect.prepareStatement(ComputerDao.DELETE_COMPUTER_FROM_COMPANY);
-			PreparedStatement preparedStatementCompany = connect.prepareStatement(DELETE_COMPANY);
-			preparedStatementComputer.setInt(1, id);
-			preparedStatementCompany.setInt(1, id);
-
-			preparedStatementComputer.executeUpdate();
-			preparedStatementCompany.executeUpdate();
-			connect.commit();
-			preparedStatementComputer.close();
-			preparedStatementCompany.close();
-			connect.setAutoCommit(true);
-			connect.close();
-		}catch(SQLException sqle) {
-			Logging.printError(ERROR_ACCESS+" dans deleteCompany "+ sqle.getMessage());
-			try {
-				if(connect!=null) {
-					connect.rollback();
-				}
-			}catch(SQLException sqle2) {
-				Logging.printError(ERROR_ACCESS+" dans deleteCompany "+ sqle2.getMessage());
-			}
-		}
+		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("id", id);
+		computerDao.deleteComputerFromCompany(id);
+		this.namedParameterJdbcTemplate.update(DELETE_COMPANY,namedParameters);
 	}
-
+	
+	
+	
 }
+
+
+
+
+

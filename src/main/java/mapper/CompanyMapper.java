@@ -7,21 +7,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+
 import dto.CompanyDto;
-import dto.ComputerDto;
 import model.Company;
-import model.Computer;
 
 /**
  * @author excilys
  *
  */
-public class CompanyMapper {
+@Component
+public class CompanyMapper implements RowMapper<Company>{
 	Company company;
 	private static volatile CompanyMapper instance = null;
 		
 	public CompanyMapper() {}
 	
+	@Override
+	public Company mapRow(ResultSet rs, int rowNum) throws SQLException {
+		return getCompany(rs).get();
+	}
 	
 	public Optional<Company> getCompany(ResultSet res){
 

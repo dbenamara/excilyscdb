@@ -63,7 +63,7 @@ public class ComputerDaoTest {
 			newComputer = new Computer.ComputerBuilder().setIdCompagny(new Company.CompanyBuilder().setId(5).build())
 					.setId(51).setDiscontinued(null).setIntroduced(null).setName("toto").build();
 			System.out.println(newComputer);
-			assertTrue(computerDao.create(newComputer));
+			computerDao.create(newComputer);
 			
 
 		} catch(AssertionError e) {
@@ -80,7 +80,7 @@ public class ComputerDaoTest {
 			newComputer = computerDao.find(50).get();
 			assertTrue(newComputer != null);
 			assertTrue(newComputer.getName().equals("Commodore PET"));
-			assertTrue(computerDao.delete(50));
+			computerDao.delete(50);
 			
 		} catch(AssertionError e) {
 			fail("Erreur au delete "+ e.getMessage());
