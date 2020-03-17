@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dao.ComputerDao;
-import dao.Connexion;
+//import dao.Connexion;
 import mapper.ComputerMapper;
 import model.Company;
 import model.Computer;
@@ -25,7 +25,7 @@ import springconfig.AppConfig;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class})
 public class ComputerDaoTest {
-	private Connexion conn;
+	//private Connexion conn;
 	Company newCompany = new Company(42,"Research In Motion");
 	private Computer newComputer;
 	private ComputerDao computerDao;

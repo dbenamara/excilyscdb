@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import dao.Connexion;
+//import dao.Connexion;
 import dto.ComputerDto;
 import exceptions.Logging;
 import mapper.ComputerMapper;
@@ -35,7 +35,7 @@ import services.OrderSQL;
 public class ServletListComputers extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private Connexion conn;
+	//private Connexion conn;
 	private int taillePage = 20;
 	private int pageIterator;
 	List<Computer> computerListPagine;

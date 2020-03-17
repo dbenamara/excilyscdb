@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import mapper.ComputerMapper;
 import model.Computer;
@@ -95,7 +94,7 @@ public class ComputerDao {
 
 	}
 	
-	@Transactional
+
 	public void deleteComputerFromCompany(int id) {
 		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("id", id);
 		this.namedParameterJdbcTemplate.update(DELETE_COMPUTER_FROM_COMPANY, namedParameters);

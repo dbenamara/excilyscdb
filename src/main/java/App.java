@@ -1,6 +1,9 @@
 
 
 
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import mapper.ComputerMapper;
 import model.Company;
 import model.Computer;
@@ -14,10 +17,11 @@ import springconfig.AppConfig;
  *
  */
 public class App {
-
+	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 		private ComputerMapper computerMapper;
 		private ComputerService computerService;
 		private CompanyService companyService;
+		
 	
 		
 		
@@ -82,7 +86,6 @@ public class App {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 }

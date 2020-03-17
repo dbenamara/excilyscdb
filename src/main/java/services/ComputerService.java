@@ -15,9 +15,10 @@ import model.Computer;
 @Service
 public class ComputerService {
 	private static volatile ComputerService instance = null;
+	
 	private ComputerDao computerDao;
 	
-	
+	@Autowired
 	public ComputerService(ComputerDao computerDao) {
 		this.computerDao = computerDao;
 	}
