@@ -11,11 +11,13 @@ import java.util.stream.Collectors;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import dto.CompanyDto;
@@ -35,6 +37,8 @@ import validators.ComputerValidator;
  * @author Djamel
  *
  */
+@WebServlet("/AddComputer")
+@Controller
 public class ServletAddComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private int idComputer=5;

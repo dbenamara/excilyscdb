@@ -1,6 +1,3 @@
-/**
- * 
- */
 package mapper;
 
 import java.sql.ResultSet;
@@ -20,7 +17,6 @@ import model.Company;
 @Component
 public class CompanyMapper implements RowMapper<Company>{
 	Company company;
-	private static volatile CompanyMapper instance = null;
 		
 	public CompanyMapper() {}
 	

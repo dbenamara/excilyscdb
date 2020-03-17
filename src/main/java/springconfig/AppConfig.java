@@ -22,30 +22,30 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 
 @Configuration
 @ComponentScan(basePackages = {"services","dao","servlet","test.mavencdb.dao","mapper"})
-@PropertySource("classpath:Connexion.properties")
+@PropertySource("classpath:datasource.properties")
 public class AppConfig extends AbstractContextLoaderInitializer {
 	@Autowired
     Environment environment;
 
 	
-	private String mysqlUrl = "jdbcUrl";
+	private String url = "datasource.jdbcUrl";
 
 
-	private String driver = "driverClassName";
+	private String driver = "datasource.driverClassName";
 	
 
-	private String username = "username";
+	private String username = "datasource.username";
 
 
-	private String password = "password";
+	private String password = "datasource.password";
 	
 	@Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl("jdbc:mysql://localhost:3306/computer-database-db");
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUsername("admincdb");
-        dataSource.setPassword("qwerty1234");
+        dataSource.setUrl(environment.getRequiredProperty(driver));
+        dataSource.setDriverClassName(environment.getRequiredProperty(url));
+        dataSource.setUsername(environment.getRequiredProperty(username));
+        dataSource.setPassword(environment.getRequiredProperty(password));
         
         return dataSource;
     }
