@@ -50,7 +50,7 @@ public class ComputerService {
 	}
 	
 	public List<Computer> findName(String name, int offset, int number, String orderBy) {
-		return computerDao.findName(name, offset,number, orderBy);
+		return computerDao.findName(name,offset,number,orderBy);
 	}
 	
 	public void deleteAllComputerSelected(List<Integer> idList) {

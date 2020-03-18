@@ -30,8 +30,8 @@ public class ComputerDao {
 	private static final String DELETE_COMPUTER_SELECTED = "DELETE FROM computer WHERE id = :id;";
 	private static final String UPDATE_COMPUTER = "UPDATE computer SET name= :name, introduced= :introduced, discontinued= :discontinued, company_id= :company_id WHERE id= :id;";
 	private static final String GET_ALL_COMPUTER = "SELECT computer.id , computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company ON company_id=company.id;";
-	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id ORDER BY ";
-	private static final String GET_COMPUTER_BY_NAME = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.name LIKE :like LIMIT :offset :number ORDER BY ";
+	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id ORDER BY :order LIMIT :offset, :number;";
+	private static final String GET_COMPUTER_BY_NAME = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.name LIKE :like ORDER BY :order LIMIT :offset, :number;";    
 	private static final String GET_COMPUTER_BY_ID = "SELECT * FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.id = :computer.id;";
 	protected static final String DELETE_COMPUTER_FROM_COMPANY = "DELETE FROM computer WHERE company_id= :id;";
 
@@ -81,17 +81,17 @@ public class ComputerDao {
 	}
 	
 	public  List<Computer> getPageComputer(int offset, int number, String orderBy) {
-		orderBy = GET_PAGE_COMPUTER + orderBy;
-		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("offset", offset).addValue("number", number);
-		return this.namedParameterJdbcTemplate.query(orderBy, namedParameters, this.computerMapper);
+		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("order", orderBy).addValue("offset", offset)
+													.addValue("number", number);
+		return this.namedParameterJdbcTemplate.query(GET_PAGE_COMPUTER, namedParameters, this.computerMapper);
 
 	}
 	
-	public List<Computer> findName(String name, int offset,int number, String orderBy) {
-		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("like", name)
-				.addValue("number", number).addValue("offset", offset);
+	public List<Computer> findName(String like,int offset,int number, String orderBy) {
+		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("like", '%'+like+'%')
+				.addValue("offset", offset).addValue("number", number).addValue("order", orderBy);
+		
 		return this.namedParameterJdbcTemplate.query(GET_COMPUTER_BY_NAME, namedParameters, this.computerMapper);
-
 	}
 	
 
