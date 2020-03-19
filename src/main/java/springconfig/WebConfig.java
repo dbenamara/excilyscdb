@@ -28,14 +28,14 @@ public class WebConfig implements WebMvcConfigurer {
 		configurer.enable();
 	}
 
-//	@Bean
-//	public ViewResolver viewResolver() {
-//		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-//		viewResolver.setViewClass(JstlView.class);
-//		viewResolver.setPrefix("/WEB-INF/views/");
-//		viewResolver.setSuffix(".jsp");
-//		return viewResolver;
-//	}
+	@Bean
+	public ViewResolver viewResolver() {
+		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+		viewResolver.setViewClass(JstlView.class);
+		viewResolver.setPrefix("/src/main/java/webapp/views/");
+		viewResolver.setSuffix(".jsp");
+		return viewResolver;
+	}
 
 //	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
