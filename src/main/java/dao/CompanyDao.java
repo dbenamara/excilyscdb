@@ -26,7 +26,7 @@ import model.Company;
 public class CompanyDao {
 	
 	private static final String CREATE_COMPANY = "INSERT INTO company name = :name";
-	private static final String GET_ALL_COMPANY = "SELECT * FROM company";
+	private static final String GET_ALL_COMPANY = "SELECT * FROM company;";
 	private static final String SELECT_COMPANY_PAGE = "SELECT * FROM company LIMIT :limit,:offset ";
 	private static final String ERROR_ACCESS = "Impossible de se connecter à la bdd";
 	private static final String DELETE_COMPANY = "DELETE FROM company WHERE id = :id;";
@@ -48,8 +48,7 @@ public class CompanyDao {
 	}
 	
 	public List<Company> readAll() {
-		SqlParameterSource namedParameters = new MapSqlParameterSource();
-		return this.namedParameterJdbcTemplate.query(GET_ALL_COMPANY, namedParameters, this.companyMapper);
+		return this.namedParameterJdbcTemplate.query(GET_ALL_COMPANY, this.companyMapper);
 	}
 	
 	public List<Company> getPageCompany(int offset, int number) {

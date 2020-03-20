@@ -1,12 +1,13 @@
 package servlet;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,13 +23,13 @@ import services.ComputerService;
  * @author Djamel
  *
  */
-@RequestMapping(value = "/ListComputers")
+
 @Controller
 public class ServletListComputers {
 	private static final long serialVersionUID = 1L;
 
-	private int taillePage = 20;
-	private int pageIterator;
+	private Integer taillePage = 20;
+	private Integer pageIterator = 0;
 	List<Computer> computerListPagine;
 	
 	private ComputerService computerService;
@@ -39,21 +40,30 @@ public class ServletListComputers {
 		this.companyService = companyService;
 	}
 	
-	
-	public ModelAndView ListComputers(@RequestParam(required = false, value = "pageIterator") int pageIterator,
-			@RequestParam(required = false, value = "taillePage") int taillePage,
+	@GetMapping(value = "/ListComputers")
+	public ModelAndView ListComputers(@RequestParam(required = false, value = "pageIterator") Integer pageIt,
+			@RequestParam(required = false, value = "taillePage") Integer tailleP,
 			@RequestParam(required = false, value = "order") String orderBy,
-			@RequestParam(required = false, value = "nbComputer") int nbComputer,
-			@RequestParam(required = false, value = "nbPages") int nbPages,
+			@RequestParam(required = false, value = "nbComputer") Integer nbComputer,
+			@RequestParam(required = false, value = "nbPages") Integer nbPages,
 			@RequestParam(required = false, value = "searchForm") String searchForm) {
 		
+		if(pageIt != null)
+			pageIterator = pageIt;
+		if(tailleP!=null)
+			taillePage = tailleP;
 		ModelAndView modelAndView = new ModelAndView("ListComputers");
-		List<Computer> computerList; 
+		List<Computer> computerList = new ArrayList<>();
+		List<ComputerDto> computerDtoList = new ArrayList<>();
+		
 		computerList=computerService.getPageComputer(pageIterator*taillePage,taillePage,orderBy);
+		computerDtoList = computerList.stream().map(computer -> new ComputerMapper().computerToComputerDto(computer)).collect(Collectors.toList());
+
+		
 		nbComputer = computerService.readAll().size();
+		List<Computer> tmp= computerService.readAll();
 		nbPages = (int) Math.ceil((double)nbComputer/taillePage);
 		
-		List<ComputerDto> computerDtoList = computerList.stream().map(computer -> new ComputerMapper().computerToComputerDto(computer)).collect(Collectors.toList());
 		
 		setDashboardAttribute(modelAndView,pageIterator,taillePage,orderBy,nbComputer,nbPages,searchForm,computerDtoList);
 		return modelAndView;
@@ -78,7 +88,7 @@ public class ServletListComputers {
 		return modelAndView;
 	}
 
-	private void setDashboardAttribute(ModelAndView modelAndView, int pageIterator, int taillePage, String orderBy, int nbComputer,
+	private void setDashboardAttribute(ModelAndView modelAndView, Integer pageIterator, Integer taillePage, String orderBy, int nbComputer,
 		int nbPages, String searchForm,List<ComputerDto> computerList) {
 		modelAndView.addObject("taillePage", taillePage);
 		modelAndView.addObject("pageIterator", pageIterator);

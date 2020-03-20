@@ -66,7 +66,7 @@ public class ServletAddComputer extends HttpServlet {
 		return modelAndView;			
 	}
 	
-	@PostMapping(value="/addComputer")
+	@PostMapping(value="/AddComputer")
 	public ModelAndView addComputer(@RequestParam(value = "computerName") String computerName,
 			@RequestParam(required = false, value = "introduced") String introduced,
 			@RequestParam(required = false, value = "discontinued") String discontinued,
