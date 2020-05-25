@@ -34,7 +34,7 @@ import validators.ComputerValidator;
  * @author Djamel
  *
  */
-@WebServlet("/EditComputer")
+
 @Controller
 public class ServletEditComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -56,7 +56,9 @@ public class ServletEditComputer extends HttpServlet {
 	}	
 
 	@GetMapping(value = "/EditComputer")
-	public ModelAndView showEditComputer(@RequestParam(value="id") int computerId) {
+	public ModelAndView showEditComputer(@RequestParam(value="id") Integer computerId) {
+		if(computerId !=null)
+			idComputer = computerId;
 		ModelAndView modelAndView = new ModelAndView();
 		Computer computerToUpdate=computerService.find(idComputer);
 		compDto = new ComputerMapper().computerToComputerDto(computerToUpdate);
