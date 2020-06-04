@@ -6,6 +6,7 @@
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <!DOCTYPE html PUBLIC  "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -44,10 +45,17 @@
 				</c:otherwise>
 			</c:choose>
         	
+        	
+        	 <div align="right">
+                    <a class="btn btn-default" id="editComputer" href="?lang=en">en</a> 
+                    <a class="btn btn-default" id="editComputer" href="?lang=fr">fr</a>
+                	<br><br>
+                </div>
+        	
             
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
-                    <form id="searchForm" action="#" method="POST" class="form-inline">
+                    <form id="searchForm" action="#" method="GET" class="form-inline">
 
                         <input type="search" id="searchbox" name="searchForm" class="form-control" placeholder="Search name" />
                         <input type="submit" id="searchsubmit" value="Filter by name"
@@ -55,13 +63,13 @@
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="AddComputer">Add Computer</a> 
-                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
+                    <a class="btn btn-success" id="addComputer" href="AddComputer"><spring:message code="label.addComputer"></spring:message></a> 
+                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="label.edit"></spring:message></a>
                 </div>
             </div>
         </div>
 
-        <form id="deleteForm" action="#" method="POST">
+        <form id="deleteForm" action="ListComputers/deleteComputer" method="POST">
             <input type="hidden" name="selection" id="selection" value="">
         </form>
 
@@ -101,7 +109,7 @@
                 <tbody id="results">
                 <c:choose>
 				<c:when test="${search != null}">
-                 	<c:forEach items="${computerSearchedList}" var="computer">
+                 	<c:forEach items="${computerList}" var="computer">
                     	<tr>
                         	<td class="editMode">
                             	<input type="checkbox" name="cb" class="cb" value="${computer.id}">

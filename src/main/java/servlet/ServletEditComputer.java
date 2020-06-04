@@ -95,48 +95,11 @@ public class ServletEditComputer extends HttpServlet {
 			Logging.printError(NAME_ERROR + e.getMessage());
 		} finally {
 			idComputer=computerDto.getId();
-			modelAndView.setViewName("redirect:/EditComputer");
+			modelAndView.setViewName("redirect:/ListComputers");
 			
 		}
 		return modelAndView;
 
 	}
 	
-//	protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException{
-//		if(request.getParameter("id")!=null) {
-//			idComputer=	Integer.parseInt(request.getParameter("id"));
-//		}
-//		Computer computerToUpdate=computerService.find(idComputer);
-//		compDto = new ComputerMapper().computerToComputerDto(computerToUpdate);
-//		List<CompanyDto> companyDtoList=new ArrayList<>();
-//		List<Company> companyList=new ArrayList<>();
-//		companyList=companyService.readAll();
-//		companyDtoList = companyList.stream().map(company -> new CompanyMapper().companyToCompanyDto(company)).collect(Collectors.toList());
-//		
-//		request.setAttribute("companies", companyDtoList);
-//		request.setAttribute("computerToUpdate", compDto);
-//		
-//		request.getRequestDispatcher("views/EditComputer.jsp").forward(request, response);
-//	}
-//	
-//	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		CompanyDto companyDto = new CompanyDto(Integer.parseInt(request.getParameter("companyId")));
-//		ComputerDto computerDto = new ComputerDto(request.getParameter("computerName"),request.getParameter("introduced"),request.getParameter("discontinued"),companyDto);  
-//		computerDto.setId(Integer.parseInt(request.getParameter("computerId")));
-//		ComputerValidator computerValidator = new ComputerValidator();
-//		try {
-//			Computer computerToUpdate = new ComputerMapper().convertFromComputerDtoToComputer(computerDto);
-//			computerValidator.validateComputer(computerToUpdate);
-//			computerService.update(computerToUpdate);
-//		} catch(ParseException e) {
-//			Logging.printError(PARSE_ERROR + e.getMessage());
-//		} catch(DateValidator e) {
-//			Logging.printError(DATE_ERROR + e.getMessage());
-//		} catch(NameValidator e) {
-//			Logging.printError(NAME_ERROR + e.getMessage());
-//		} finally {
-//			idComputer=computerDto.getId();
-//			response.sendRedirect("ListComputers");
-//		}
-//	}
 }

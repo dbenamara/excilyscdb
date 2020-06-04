@@ -37,31 +37,31 @@ public class WebConfig implements WebMvcConfigurer {
 		return viewResolver;
 	}
 
-//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-//	}
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+	}
 	
-//	@Bean("messageSource")
-//	public MessageSource messageSource() {
-//		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-//		messageSource.setBasename("classpath:locale/messages");
-//		messageSource.setDefaultEncoding("UTF-8");
-//		messageSource.setUseCodeAsDefaultMessage(true);
-//		return messageSource;
-//	}
+	@Bean("messageSource")
+	public MessageSource messageSource() {
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasename("classpath:locale/messages");
+		messageSource.setDefaultEncoding("UTF-8");
+		messageSource.setUseCodeAsDefaultMessage(true);
+		return messageSource;
+	}
 
-//	@Bean
-//	public LocaleResolver localeResolver() {
-//		CookieLocaleResolver localeResolver = new CookieLocaleResolver();
-//		return localeResolver;
-//	}
+	@Bean
+	public LocaleResolver localeResolver() {
+		CookieLocaleResolver localeResolver = new CookieLocaleResolver();
+		return localeResolver;
+	}
 
-//	@Override
-//	public void addInterceptors(InterceptorRegistry registry) {
-//		LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-//		localeChangeInterceptor.setParamName("lang");
-//		registry.addInterceptor(localeChangeInterceptor);
-//	}
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+		localeChangeInterceptor.setParamName("lang");
+		registry.addInterceptor(localeChangeInterceptor);
+	}
 	
 	
 	

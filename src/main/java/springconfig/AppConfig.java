@@ -27,7 +27,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 @ComponentScan(basePackages = {"services","dao","servlet","test.mavencdb.dao","mapper"})
 @PropertySource("classpath:dataSource.properties")
 public class AppConfig implements WebApplicationInitializer {
-	
+	@Autowired
     Environment environment;
 
 	private String driver = "dataSource.driverClassName";

@@ -35,10 +35,15 @@ public class CompanyDao {
 	private ComputerDao computerDao;
 	private CompanyMapper companyMapper = new CompanyMapper();
 	
-	public void SpringCompanyDao(DataSource dataSource,ComputerDao computerDao) {
-	    this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+	public CompanyDao(DataSource dataSource) {
+		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	    this.computerDao = computerDao;
 	}
+	
+//	public void SpringCompanyDao(DataSource dataSource,ComputerDao computerDao) {
+//	    this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+//	    this.computerDao = computerDao;
+//	}
 	
 	
 	public void create(Company company) {

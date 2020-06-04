@@ -5,6 +5,7 @@
 
 <%@taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<!-- <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%> -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +29,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
-                    <h1>Add Computer</h1>
+                      <h1>Add Computer</h1> 
+                    <!--<h1><spring:message code="label.addComputer" /></h1>-->
 					<div class="form-group ">
                      </div>
                     <form action="AddComputer" method="POST" name="AddComputer">
@@ -36,8 +38,9 @@
                            <!--  <input type="text" hidden id="computerId" name="computerId" value="${computerToUpdate.id }"/>  TODO: Change this value with the computer id -->
                         
                             <div class="form-group">
-                                <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name">
+                               <label for="computerName">Computer name</label>
+                                <!--<label for="computerName"><spring:message code="label.computerName" /></label>
+                            -->    <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name">
                           		
                             </div>
                             <div class="form-group">

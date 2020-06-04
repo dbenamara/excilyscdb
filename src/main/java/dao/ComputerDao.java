@@ -27,7 +27,7 @@ public class ComputerDao {
 	private static final String CREATE_COMPUTER = "INSERT INTO computer (name, introduced, discontinued, company_id)"
 			+ " VALUES (:computerName, :introduced, :discontinued, :companyId);";
 	private static final String DELETE_COMPUTER = "DELETE FROM computer WHERE id = :id ;";
-	private static final String DELETE_COMPUTER_SELECTED = "DELETE FROM computer WHERE id = :id;";
+	private static final String DELETE_COMPUTER_SELECTED = "DELETE FROM computer WHERE id IN (:id);";
 	private static final String UPDATE_COMPUTER = "UPDATE computer SET name= :name, introduced= :introduced, discontinued= :discontinued, company_id= :company_id WHERE id= :id;";
 	private static final String GET_ALL_COMPUTER = "SELECT computer.id , computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company ON company_id=company.id;";
 	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id ORDER BY :order LIMIT :offset, :number;";

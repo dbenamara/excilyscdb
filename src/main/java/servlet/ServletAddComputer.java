@@ -91,7 +91,7 @@ public class ServletAddComputer extends HttpServlet {
 		} catch(NameValidator e) {
 			Logging.printError(NAME_ERROR + e.getMessage());
 		} finally {
-			modelAndView.setViewName("redirect:/dashboard");
+			modelAndView.setViewName("redirect:/ListComputers");
 		}
 
 		return modelAndView;
