@@ -8,15 +8,16 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 //import dao.Connexion;
 import dto.ComputerDto;
+import dto.RequestParamDto;
 import exceptions.Logging;
+import mapper.CompanyMapper;
 import mapper.ComputerMapper;
-import model.Company;
 import model.Computer;
 import services.CompanyService;
 import services.ComputerService;
@@ -29,7 +30,7 @@ import services.ComputerService;
 @Controller
 @RequestMapping(value="/ListComputers")
 public class ServletListComputers {
-	private static final long serialVersionUID = 1L;
+//	private static final long serialVersionUID = 1L;
 
 	private Integer taillePage = 20;
 	private Integer pageIterator = 0;
@@ -37,46 +38,53 @@ public class ServletListComputers {
 	
 	private ComputerService computerService;
 	private CompanyService companyService;
+	ComputerMapper computerMapper;
+	CompanyMapper companyMapper;
 	
-	public ServletListComputers(ComputerService computerService, CompanyService companyService) {
+	public ServletListComputers(ComputerService computerService, CompanyService companyService,
+			ComputerMapper computerMapper, CompanyMapper companyMapper) {
 		this.computerService = computerService;
 		this.companyService = companyService;
+		this.computerMapper = computerMapper;
+		this.companyMapper = companyMapper;
 	}
 	
-	@GetMapping()
-	public ModelAndView ListComputers(@RequestParam(required = false, value = "pageIterator") Integer pageIt,
-			@RequestParam(required = false, value = "taillePage") Integer tailleP,
-			@RequestParam(required = false, value = "order") String orderBy,
-			@RequestParam(required = false, value = "nbComputer") Integer nbComputer,
-			@RequestParam(required = false, value = "nbPages") Integer nbPages,
-			@RequestParam(required = false, value = "searchForm") String search) {
+	@GetMapping
+	public ModelAndView ListComputers(RequestParamDto requestParamDto) {
 		
 		
-		if(pageIt != null)
-			pageIterator = pageIt;
-		if(tailleP!=null)
-			taillePage = tailleP;
+		if(requestParamDto.getPageIterator() != null)
+			pageIterator = Integer.parseInt(requestParamDto.getPageIterator());
+		if(requestParamDto.getTaillePage()!=null)
+			taillePage = Integer.parseInt(requestParamDto.getTaillePage());
 		ModelAndView modelAndView = new ModelAndView("ListComputers");
 		List<Computer> computerList = new ArrayList<>();
 		List<ComputerDto> computerDtoList = new ArrayList<>();
-		if(search == null) {
-			computerList=computerService.getPageComputer(pageIterator*taillePage,taillePage,orderBy);
-			computerDtoList = computerList.stream().map(computer -> new ComputerMapper().computerToComputerDto(computer)).collect(Collectors.toList());
+		Integer nbComputer=0;
+		
+		if(requestParamDto.getSearch() == null) {
+			computerList=computerService.getPageComputer(pageIterator*taillePage,taillePage,requestParamDto.getOrderBy());
+			computerDtoList = computerList.stream().map(computer -> computerMapper.computerToComputerDto(computer)).collect(Collectors.toList());
+			nbComputer = computerService.readAll().size();
 		}
 		else {
-			computerList=computerService.findName(search, pageIterator*taillePage, taillePage, orderBy);
-			computerDtoList = computerList.stream().map(computer -> new ComputerMapper().computerToComputerDto(computer)).collect(Collectors.toList());
-
+			computerList=computerService.findName(requestParamDto.getSearch(), pageIterator*taillePage, taillePage, requestParamDto.getOrderBy());
+			System.out.println(computerList);
+			computerDtoList = computerList.stream().map(computer -> computerMapper.computerToComputerDto(computer)).collect(Collectors.toList());
+	
+			nbComputer = computerService.findName(requestParamDto.getSearch(), pageIterator*taillePage, taillePage, requestParamDto.getOrderBy()).size();
 		}
 		
-		nbComputer = computerService.readAll().size();
-		List<Computer> tmp= computerService.readAll();
-		nbPages = (int) Math.ceil((double)nbComputer/taillePage);
+		
+		Integer nbPages = (int) Math.ceil((double)nbComputer/taillePage);
+		requestParamDto.setNbPages(String.valueOf(nbPages));
 		
 		
-		setDashboardAttribute(modelAndView,pageIterator,taillePage,orderBy,nbComputer,nbPages,search,computerDtoList);
+		setDashboardAttribute(modelAndView,pageIterator,taillePage,requestParamDto.getOrderBy(),nbComputer,nbPages,requestParamDto.getSearch(),computerDtoList);
 		return modelAndView;
 	}
+	
+
 	
 	
 	@PostMapping(value="/deleteComputer")
@@ -111,10 +119,7 @@ public class ServletListComputers {
 		modelAndView.addObject("computerList", computerList);
 	}
 	
-	
 }
-
-
 
 
 

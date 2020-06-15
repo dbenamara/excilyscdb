@@ -40,22 +40,17 @@ public class CompanyMapper implements RowMapper<Company>{
 	public CompanyDto companyToCompanyDto(Company company) {
 		CompanyDto companyDto = new CompanyDto();
 		companyDto.setId(company.getId());
-		companyDto.setName(company.getName());
+		companyDto.setName(company.getName()!=null?company.getName():null);
 		return companyDto;
 		
 
 	}
 	
-	public CompanyDto mapFromCompanyToCompanyDto(Company company) {
-		CompanyDto companyDto=new CompanyDto();
-		companyDto.setId(company.getId());
-		companyDto.setName(company.getName());
-		return companyDto;
-	}
-	public Company mapFromCompanyDtoToCompany(CompanyDto companyDto) {
+	
+	public Company CompanyDtoToCompany(CompanyDto companyDto) {
 		Company company=new Company();
 		company.setId(companyDto.getId());
-		company.setName(companyDto.getName());
+		company.setName(companyDto.getName()!=null?company.getName():null);
 		return company;
 
 	}

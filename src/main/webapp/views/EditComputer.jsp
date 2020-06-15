@@ -21,7 +21,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="DashboardComputerServlet"> Application - Computer Database </a>
+            <a class="navbar-brand" href="ListComputers"> Application - Computer Database </a>
         </div>
     </header>
     <section id="main">
@@ -37,24 +37,24 @@
                      </div>
                     <form action="EditComputer" method="POST">
                         <fieldset>
-                           <input type="text" hidden id="computerId" name="computerId" value="${computerToUpdate.id }"/> <!-- TODO: Change this value with the computer id -->
+                           <input type="text" hidden id="computerId" name="id" value="${computerToUpdate.id }"/> <!-- TODO: Change this value with the computer id -->
                         
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" value="${computerToUpdate.name }" placeholder="Computer name">
+                                <input type="text" class="form-control" id="computerName" name="name" value="${computerToUpdate.name }" placeholder="Computer name">
                           		
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="text" class="form-control" id="introduced" name="introduced" placeholder="Introduced date">
+                                <input type="text" class="form-control" id="introduced" name="introduced" value="${ computerToUpdate.introduced }" placeholder="Introduced date">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="text" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date">
+                                <input type="text" class="form-control" id="discontinued" name="discontinued" value="${ computerToUpdate.discontinued }" placeholder="Discontinued date">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
-                                <select class="form-control" id="companyId" name="companyId">
+                                <select class="form-control" id="companyId" name="company.id">
 	                                <c:forEach items="${companies}" var="company">
 	                                	<c:if test="${ company.id==computerToUpdate.company.id}">
 	                                		 <option value="${company.id}" selected><c:out value="${company.name}"></c:out></option>

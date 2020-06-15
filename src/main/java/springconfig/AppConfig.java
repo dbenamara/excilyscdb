@@ -1,16 +1,23 @@
 package springconfig;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -24,7 +31,8 @@ import org.springframework.web.servlet.DispatcherServlet;
  */
 
 @Configuration
-@ComponentScan(basePackages = {"services","dao","servlet","test.mavencdb.dao","mapper"})
+@ComponentScan(basePackages = {"services","dao","servlet","test.mavencdb.dao","mapper","dto", "model"})
+@EnableTransactionManagement
 @PropertySource("classpath:dataSource.properties")
 public class AppConfig implements WebApplicationInitializer {
 	@Autowired
@@ -55,6 +63,29 @@ public class AppConfig implements WebApplicationInitializer {
 		 AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
 		 rootContext.register(AppConfig.class);
 		 return rootContext;
+	}
+	
+	
+	@Bean
+    public LocalSessionFactoryBean getSessionFactory() {
+        LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
+        //factoryBean.setConfigLocation(context.getResource(dataSource));
+        factoryBean.setDataSource(dataSource());
+        factoryBean.setPackagesToScan("model");
+        return factoryBean;
+    }
+	
+	@Bean
+    public PlatformTransactionManager getTransactionManager(EntityManagerFactory emf) {
+		JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(emf);
+        return transactionManager;
+    }
+	
+	@Bean
+	@Qualifier(value = "entityManager")
+	public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
+	    return entityManagerFactory.createEntityManager();
 	}
 	
 	@Override

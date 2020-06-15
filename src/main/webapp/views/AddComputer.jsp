@@ -22,7 +22,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="DashboardComputerServlet"> Application - Computer Database </a>
+            <a class="navbar-brand" href="ListComputers"> Application - Computer Database </a>
         </div>
     </header>
     <section id="main">
@@ -67,7 +67,7 @@
                         </fieldset>
                         
                         <div class="actions pull-right">
-                            <a href="ServletListComputers"><input type="submit" value="Add" class="btn btn-primary"></a>
+                            <a href="ListComputers"><input type="submit" value="Add" class="btn btn-primary"></a>
                             or
                             <a href="ServletListComputers" class="btn btn-default">Cancel</a>
                         </div>

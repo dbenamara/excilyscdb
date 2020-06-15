@@ -3,15 +3,17 @@ package dao;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import mapper.ComputerMapper;
 import model.Computer;
+import model.QComputer;
 
 /**
  * @author Djamel
@@ -20,84 +22,95 @@ import model.Computer;
 @Repository
 public class ComputerDao {
 
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	private ComputerMapper computerMapper = new ComputerMapper();
-	
-	
-	private static final String CREATE_COMPUTER = "INSERT INTO computer (name, introduced, discontinued, company_id)"
-			+ " VALUES (:computerName, :introduced, :discontinued, :companyId);";
-	private static final String DELETE_COMPUTER = "DELETE FROM computer WHERE id = :id ;";
-	private static final String DELETE_COMPUTER_SELECTED = "DELETE FROM computer WHERE id IN (:id);";
-	private static final String UPDATE_COMPUTER = "UPDATE computer SET name= :name, introduced= :introduced, discontinued= :discontinued, company_id= :company_id WHERE id= :id;";
-	private static final String GET_ALL_COMPUTER = "SELECT computer.id , computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company ON company_id=company.id;";
-	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id ORDER BY :order LIMIT :offset, :number;";
-	private static final String GET_COMPUTER_BY_NAME = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.name LIKE :like ORDER BY :order LIMIT :offset, :number;";    
-	private static final String GET_COMPUTER_BY_ID = "SELECT * FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.id = :computer.id;";
-	protected static final String DELETE_COMPUTER_FROM_COMPANY = "DELETE FROM computer WHERE company_id= :id;";
+	private ComputerMapper computerMapper;
+//	
+//	
+//	private static final String CREATE_COMPUTER = "INSERT INTO computer (name, introduced, discontinued, company_id)"
+//			+ " VALUES (:computerName, :introduced, :discontinued, :companyId);";
+//	private static final String DELETE_COMPUTER = "DELETE FROM computer WHERE id = :id ;";
+//	private static final String DELETE_COMPUTER_SELECTED = "DELETE FROM computer WHERE id IN (:id);";
+//	private static final String UPDATE_COMPUTER = "UPDATE computer SET name= :name, introduced= :introduced, discontinued= :discontinued, company_id= :company_id WHERE id= :id;";
+//	private static final String GET_ALL_COMPUTER = "SELECT computer.id , computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company ON company_id=company.id;";
+//	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id ORDER BY :order LIMIT :offset, :number;";
+//	private static final String GET_COMPUTER_BY_NAME = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.name LIKE :like ORDER BY :order LIMIT :offset, :number;";    
+//	private static final String GET_COMPUTER_BY_ID = "SELECT * FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.id = :computer.id;";
+//	protected static final String DELETE_COMPUTER_FROM_COMPANY = "DELETE FROM computer WHERE company_id= :id;";
 
+
+	@PersistenceContext
+	EntityManager entityManager;
 	
-	
-	public ComputerDao(DataSource dataSource) {
-		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+	public ComputerDao(ComputerMapper computerMapper) {
+		this.computerMapper = computerMapper;
 	}
 	
 	public void create(Computer computer) {
-		SqlParameterSource namedParameters = new MapSqlParameterSource()
-				.addValue("computerName", computer.getName())
-				.addValue("introduced", computer.getIntroduced())
-				.addValue("discontinued", computer.getDiscontinued())
-				.addValue("companyId", computer.getCompany().getId());
-		this.namedParameterJdbcTemplate.update(CREATE_COMPUTER, namedParameters);
+		entityManager.persist(computer);
 	}
 	
 	public List<Computer> readAll() {
-		return this.namedParameterJdbcTemplate.query(GET_ALL_COMPUTER, this.computerMapper);
+		JPAQuery<Computer> query = new JPAQuery<Computer>(entityManager);
+		QComputer computer = QComputer.computer;
+		return query.from(computer).fetch();
 	}
 	
 	public void delete(int id) {
-		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("id", id);
-		this.namedParameterJdbcTemplate.update(DELETE_COMPUTER, namedParameters);
+		QComputer computer = QComputer.computer;
+		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+		queryFactory.delete(computer).where(computer.id.eq(id)).execute();
 	}
 	
 	public void deleteAllComputerSelected(List<Integer> idList) {
-		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("id", idList);
-		this.namedParameterJdbcTemplate.update(DELETE_COMPUTER_SELECTED, namedParameters);
+		QComputer computer = QComputer.computer;
+		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+		queryFactory.delete(computer).where(computer.id.in(idList)).execute();
 	}
 	
 	public Optional<Computer> find(int id) {
-		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("computer.id", id);
-		return Optional.of(this.namedParameterJdbcTemplate.queryForObject(GET_COMPUTER_BY_ID, namedParameters,this.computerMapper));
-
+		QComputer computer = QComputer.computer;
+		JPAQuery<Computer> query = new JPAQuery<Computer>(entityManager);
+		return Optional.ofNullable(query.from(computer)
+				.where(computer.id.eq(id))
+				.fetchFirst());
 	}
 	
-	public void update(Computer computer) {
-		SqlParameterSource namedParameters = new MapSqlParameterSource()
-				.addValue("id", computer.getId())
-				.addValue("name", computer.getName())
-				.addValue("introduced", computer.getIntroduced())
-				.addValue("discontinued", computer.getDiscontinued())
-				.addValue("company_id", computer.getCompany().getId());
-		this.namedParameterJdbcTemplate.update(UPDATE_COMPUTER, namedParameters);
+	public void update(Computer comp) {
+		QComputer computer = QComputer.computer;
+		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+		queryFactory.update(computer).where(computer.id.eq(comp.getId()))
+		    .set(computer.name, comp.getName())
+		    .set(computer.introduced, comp.getIntroduced())
+		    .set(computer.discontinued, comp.getDiscontinued())
+		    .set(computer.company, comp.getCompany())
+		    .execute();
 	}
 	
-	public  List<Computer> getPageComputer(int offset, int number, String orderBy) {
-		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("order", orderBy).addValue("offset", offset)
-													.addValue("number", number);
-		return this.namedParameterJdbcTemplate.query(GET_PAGE_COMPUTER, namedParameters, this.computerMapper);
-
+	public  List<Computer> getPageComputer(int offset, int limit, String orderBy) {
+		JPAQuery<Computer> query = new JPAQuery<Computer>(entityManager);
+		QComputer computer = QComputer.computer;
+		return query.from(computer)
+				.limit(limit)
+				.offset(offset)
+				.orderBy(computer.name.asc())
+				.fetch();
 	}
 	
-	public List<Computer> findName(String like,int offset,int number, String orderBy) {
-		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("like", '%'+like+'%')
-				.addValue("offset", offset).addValue("number", number).addValue("order", orderBy);
-		
-		return this.namedParameterJdbcTemplate.query(GET_COMPUTER_BY_NAME, namedParameters, this.computerMapper);
+	public List<Computer> findName(String like,int offset,int limit, String orderBy) {
+		JPAQuery<Computer> query = new JPAQuery<Computer>(entityManager);
+		QComputer computer = QComputer.computer;
+		return query.from(computer)
+				.where(computer.name.like("%"+like+"%"))
+				.limit(limit)
+				.offset(offset)
+				.orderBy(computer.name.asc())
+				.fetch();
 	}
 	
 
 	public void deleteComputerFromCompany(int id) {
-		SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("id", id);
-		this.namedParameterJdbcTemplate.update(DELETE_COMPUTER_FROM_COMPANY, namedParameters);
+		QComputer computer = QComputer.computer;
+		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+		queryFactory.delete(computer).where(computer.id.eq(id)).execute();
 	}
 
 }

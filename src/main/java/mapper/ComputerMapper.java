@@ -26,9 +26,11 @@ import model.Computer;
 public class ComputerMapper implements RowMapper<Computer> {
 	private Computer computer;
 	private Company company;
-	private static volatile ComputerMapper instance = null;
+	private CompanyMapper companyMapper;
 	
-	public ComputerMapper() {}
+	public ComputerMapper(CompanyMapper companyMapper) {
+		this.companyMapper = companyMapper;
+	}
 	
 
 	@Override
@@ -37,9 +39,13 @@ public class ComputerMapper implements RowMapper<Computer> {
 	}
 
 	public static LocalDateTime convertStringToLocalDateTime(String dateString) throws ParseException {
+		if(dateString !=null && !dateString.isEmpty()) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDateTime date = LocalDate.parse(dateString,dtf).atTime(LocalTime.MIDNIGHT);
-	    return date;
+	
+		return date;
+		}
+		return null;
 	}
 	
 	public Optional<Computer> getComputer(ResultSet resDetailcomputer) throws SQLException {
@@ -63,8 +69,9 @@ public class ComputerMapper implements RowMapper<Computer> {
 	
 	public ComputerDto computerToComputerDto(Computer computer) {
 		CompanyDto companyDto = new CompanyDto();
-		companyDto.setId(computer.getCompany().getId());
-		companyDto.setName(computer.getCompany().getName());
+		if(computer.getCompany()!=null) {
+			companyDto = companyMapper.companyToCompanyDto(computer.getCompany());
+		}
 
 		ComputerDto computerDto = new ComputerDto(computer.getId(),computer.getName(),
 				computer.getIntroduced()==null?null:computer.getIntroduced().toString(),
@@ -72,8 +79,8 @@ public class ComputerMapper implements RowMapper<Computer> {
 		return computerDto;
 	}
 	
-	public static Computer convertFromComputerDtoToComputer(ComputerDto computerDto) throws ParseException {
-		Computer computer = new Computer.ComputerBuilder().setId(computerDto.getId()).setName(computerDto.getName()).setIntroduced(convertStringToLocalDateTime(computerDto.getIntroduced())).setDiscontinued(convertStringToLocalDateTime(computerDto.getDiscontinued())).setCompany(new CompanyMapper().mapFromCompanyDtoToCompany(computerDto.getCompany())).build();   
+	public  Computer convertFromComputerDtoToComputer(ComputerDto computerDto) throws ParseException {
+		Computer computer = new Computer.ComputerBuilder().setId(computerDto.getId()).setName(computerDto.getName()).setIntroduced(convertStringToLocalDateTime(computerDto.getIntroduced())).setDiscontinued(convertStringToLocalDateTime(computerDto.getDiscontinued())).setCompany(companyMapper.CompanyDtoToCompany(computerDto.getCompany())).build();   
 		return computer;
 
 	}

@@ -32,10 +32,10 @@
         <div class="container">
         	
         	<c:choose>
-				<c:when test="${ search != null }">
+				<c:when test="${ searchForm != null }">
 					
 					<h1 id="homeTitle">
-					${ nbComputer } Computers found for "${ search }"
+					${ nbComputer } Computers found for "${ searchForm }"
 					</h1>
 				</c:when>
 				<c:otherwise>
@@ -55,7 +55,7 @@
             
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
-                    <form id="searchForm" action="#" method="GET" class="form-inline">
+                    <form id="searchForm" method="GET" class="form-inline">
 
                         <input type="search" id="searchbox" name="searchForm" class="form-control" placeholder="Search name" />
                         <input type="submit" id="searchsubmit" value="Filter by name"
@@ -108,7 +108,7 @@
                 <!-- Browse attribute computers -->
                 <tbody id="results">
                 <c:choose>
-				<c:when test="${search != null}">
+				<c:when test="${searchForm != null}">
                  	<c:forEach items="${computerList}" var="computer">
                     	<tr>
                         	<td class="editMode">

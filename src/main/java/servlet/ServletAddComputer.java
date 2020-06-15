@@ -7,8 +7,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServlet;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,21 +32,27 @@ import validators.ComputerValidator;
  */
 
 @Controller
-public class ServletAddComputer extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private int idComputer=5;
+public class ServletAddComputer {
+//	private static final long serialVersionUID = 1L;
+//	private int idComputer=5;
 
 	private ComputerService computerService;
 	private CompanyService companyService;
 	
-	private ComputerDto compDto;
+//	private ComputerDto compDto;
 	private String PARSE_ERROR = "Parse error : ";
 	private static final String DATE_ERROR = "Date error : ";
 	private static final String NAME_ERROR = "Name error : ";
 	
-	public ServletAddComputer(ComputerService computerService, CompanyService companyService) {
+	ComputerMapper computerMapper;
+	CompanyMapper companyMapper;
+	
+	public ServletAddComputer(ComputerService computerService, CompanyService companyService,
+			ComputerMapper computerMapper, CompanyMapper companyMapper) {
 		this.computerService = computerService;
 		this.companyService = companyService;
+		this.computerMapper = computerMapper;
+		this.companyMapper = companyMapper;
 	}
 
 	
@@ -79,7 +83,7 @@ public class ServletAddComputer extends HttpServlet {
 		ComputerValidator computerValidator = new ComputerValidator();
 
 		try {
-			Computer computerToAdd = new ComputerMapper().convertFromComputerDtoToComputer(computerDto);
+			Computer computerToAdd = computerMapper.convertFromComputerDtoToComputer(computerDto);
 			computerValidator.validateComputer(computerToAdd);
 			computerService.create(computerToAdd);
 			
@@ -97,35 +101,6 @@ public class ServletAddComputer extends HttpServlet {
 		return modelAndView;
 	}
 	
-	
-	
-//	protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException{
-//		List<CompanyDto> companyDtoList=new ArrayList<>();
-//		List<Company> companyList=new ArrayList<>();
-//		companyList=companyService.readAll();
-//		
-//		companyDtoList = companyList.stream().map(company -> new CompanyMapper().companyToCompanyDto(company)).collect(Collectors.toList());
-//		request.setAttribute("companies", companyDtoList);
-//		request.getRequestDispatcher("views/AddComputer.jsp").forward(request, response);
-//	}
-//	
-//	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		CompanyDto companyDto = new CompanyDto(Integer.parseInt(request.getParameter("companyId")));
-//		ComputerDto computerDto = new ComputerDto(request.getParameter("computerName"),request.getParameter("introduced"),request.getParameter("discontinued"),companyDto);
-//		ComputerValidator computerValidator = new ComputerValidator();
-//		try {
-//			Computer computerToAdd = new ComputerMapper().convertFromComputerDtoToComputer(computerDto);
-//			computerValidator.validateComputer(computerToAdd);
-//			computerService.create(computerToAdd);
-//		} catch(ParseException e) {
-//			Logging.printError(PARSE_ERROR + e.getMessage());
-//		} catch(DateValidator e) {
-//			Logging.printError(DATE_ERROR + e.getMessage());
-//		} catch(NameValidator e) {
-//			Logging.printError(NAME_ERROR + e.getMessage());
-//		} finally {
-//			response.sendRedirect("ListComputers");
-//		}
-//	}
+
 	
 }

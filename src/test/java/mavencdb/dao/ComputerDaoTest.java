@@ -1,10 +1,9 @@
 package mavencdb.dao;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.Before;
+import java.time.LocalDateTime;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,28 +27,15 @@ public class ComputerDaoTest {
 	//private Connexion conn;
 	Company newCompany = new Company(42,"Research In Motion");
 	private Computer newComputer;
+	@Autowired
 	private ComputerDao computerDao;
+	@Autowired
 	private ComputerMapper computerMapper;
 	
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
 	
-	@Autowired
-	public void setComputerDao(ComputerDao computerDao, ComputerMapper computerMapper) {
-		this.computerDao = computerDao;
-		this.computerMapper = computerMapper; 
-	}
 
 
 	/**
@@ -58,51 +44,21 @@ public class ComputerDaoTest {
 	@Test
 	public void testCreate() {
 		try {
-
+			Company company = new Company.CompanyBuilder().setId(1).build();
 			
-			newComputer = new Computer.ComputerBuilder().setIdCompagny(new Company.CompanyBuilder().setId(5).build())
-					.setId(51).setDiscontinued(null).setIntroduced(null).setName("toto").build();
-			System.out.println(newComputer);
+			newComputer = new Computer.ComputerBuilder().setCompany(company).setName("testComputerencache")
+					.setIntroduced(LocalDateTime.now().minusYears(3)).setDiscontinued(LocalDateTime.now().minusYears(1)).build();
 			computerDao.create(newComputer);
 			
 
 		} catch(AssertionError e) {
 			fail("Problème à la création : " + e.getMessage());
+		} catch (Exception e) {
+			fail("Problème à la création : " + e.getMessage());
 		}
 	}
+	
 
-	/**
-	 * Test method for {@link dao.ComputerDao#delete(int)}.
-	 */
-	@Test
-	public void testDelete() {
-		try {
-			newComputer = computerDao.find(50).get();
-			assertTrue(newComputer != null);
-			assertTrue(newComputer.getName().equals("Commodore PET"));
-			computerDao.delete(50);
-			
-		} catch(AssertionError e) {
-			fail("Erreur au delete "+ e.getMessage());
-		}
-	}
-
-	/**
-	 * Test method for {@link dao.ComputerDao#update(model.Computer)}.
-	 */
-	@Test
-	public void testUpdate() {
-		newComputer = computerDao.find(30).get();
-		newComputer.setName("poulet");
-	}
-
-	/**
-	 * Test method for {@link dao.ComputerDao#readAll()}.
-	 */
-	@Test
-	public void testReadAll() {
-		//fail("Not yet implemented");
-	}
 
 	/**
 	 * Test method for {@link dao.ComputerDao#find(int)}.
@@ -120,14 +76,6 @@ public class ComputerDaoTest {
 		} catch (AssertionError e) {
 			fail("Erreur de la méthode find : " + e.getMessage());
 		}
-	}
-
-	/**
-	 * Test method for {@link dao.ComputerDao#getPageComputer(int, int)}.
-	 */
-	@Test
-	public void testGetPageComputer() {
-		//fail("Not yet implemented");
 	}
 
 }
