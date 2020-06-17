@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cdb.mycdb</groupId>
 	<artifactId>my-cdb</artifactId>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
@@ -225,4 +225,12 @@
 			</plugin>
 		</plugins>
 	</build>
+	<modules>
+		<module>core</module>
+		<module>persistence</module>
+		<module>console</module>
+		<module>service</module>
+		<module>webapp</module>
+		<module>binding</module>
+	</modules>
 </project>
