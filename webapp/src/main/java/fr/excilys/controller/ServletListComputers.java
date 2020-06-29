@@ -51,7 +51,6 @@ public class ServletListComputers {
 	@GetMapping
 	public ModelAndView ListComputers(RequestParamDto requestParamDto) {
 		
-		
 		if(requestParamDto.getPageIterator() != null)
 			pageIterator = Integer.parseInt(requestParamDto.getPageIterator());
 		if(requestParamDto.getTaillePage()!=null)

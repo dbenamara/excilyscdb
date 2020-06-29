@@ -23,18 +23,6 @@ import fr.excilys.model.QComputer;
 public class ComputerDao {
 
 	private ComputerMapper computerMapper;
-//	
-//	
-//	private static final String CREATE_COMPUTER = "INSERT INTO computer (name, introduced, discontinued, company_id)"
-//			+ " VALUES (:computerName, :introduced, :discontinued, :companyId);";
-//	private static final String DELETE_COMPUTER = "DELETE FROM computer WHERE id = :id ;";
-//	private static final String DELETE_COMPUTER_SELECTED = "DELETE FROM computer WHERE id IN (:id);";
-//	private static final String UPDATE_COMPUTER = "UPDATE computer SET name= :name, introduced= :introduced, discontinued= :discontinued, company_id= :company_id WHERE id= :id;";
-//	private static final String GET_ALL_COMPUTER = "SELECT computer.id , computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company ON company_id=company.id;";
-//	private static final String GET_PAGE_COMPUTER = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id ORDER BY :order LIMIT :offset, :number;";
-//	private static final String GET_COMPUTER_BY_NAME = "SELECT computer.id, computer.name, computer.introduced , computer.discontinued , company_id, company.name FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.name LIKE :like ORDER BY :order LIMIT :offset, :number;";    
-//	private static final String GET_COMPUTER_BY_ID = "SELECT * FROM computer LEFT JOIN company ON company_id = company.id WHERE computer.id = :computer.id;";
-//	protected static final String DELETE_COMPUTER_FROM_COMPANY = "DELETE FROM computer WHERE company_id= :id;";
 
 
 	@PersistenceContext
@@ -45,10 +33,12 @@ public class ComputerDao {
 	}
 	
 	public void create(Computer computer) {
+		System.out.println("Computer CREATE");
 		entityManager.persist(computer);
 	}
 	
 	public List<Computer> readAll() {
+		System.out.println("Computer READALL");
 		JPAQuery<Computer> query = new JPAQuery<Computer>(entityManager);
 		QComputer computer = QComputer.computer;
 		return query.from(computer).fetch();
@@ -86,6 +76,7 @@ public class ComputerDao {
 	}
 	
 	public  List<Computer> getPageComputer(int offset, int limit, String orderBy) {
+		System.out.println("cOMPUTER GETPAGESCOMPUTER");
 		JPAQuery<Computer> query = new JPAQuery<Computer>(entityManager);
 		QComputer computer = QComputer.computer;
 		return query.from(computer)
