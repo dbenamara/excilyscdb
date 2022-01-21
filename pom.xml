@@ -20,7 +20,7 @@
 		<junit-version>4.13</junit-version>
 		<mockito-all-version>1.9.5</mockito-all-version>
 		<my-sql-connector-java-version>8.0.19</my-sql-connector-java-version>
-		<h2-version>1.4.200</h2-version>
+		<h2-version>2.1.210</h2-version>
 		<servlet-api-version>3.0.1</servlet-api-version>
 		<taglibs-standard-spec-version>1.2.5</taglibs-standard-spec-version>
 		<taglibs-standard-impl-version>1.2.5</taglibs-standard-impl-version>
