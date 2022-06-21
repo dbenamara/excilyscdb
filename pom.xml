@@ -19,7 +19,7 @@
 		<HikariCP-version>3.4.2</HikariCP-version>
 		<junit-version>4.13</junit-version>
 		<mockito-all-version>1.9.5</mockito-all-version>
-		<my-sql-connector-java-version>8.0.19</my-sql-connector-java-version>
+		<my-sql-connector-java-version>8.0.28</my-sql-connector-java-version>
 		<h2-version>1.4.200</h2-version>
 		<servlet-api-version>3.0.1</servlet-api-version>
 		<taglibs-standard-spec-version>1.2.5</taglibs-standard-spec-version>
